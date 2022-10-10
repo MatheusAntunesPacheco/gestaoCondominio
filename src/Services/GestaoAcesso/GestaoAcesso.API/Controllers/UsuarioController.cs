@@ -20,7 +20,7 @@ namespace GestaoAcesso.Controllers
         [HttpPost]
         public async Task<IActionResult> CadastrarUsuario(CadastrarUsuarioCommand cadastrarUsuarioCommand)
         {
-            _logger.LogInformation($"Cadastrando usuário {cadastrarUsuarioCommand.NomeCompleto}");
+            _logger.LogInformation($"Cadastrando usuário {cadastrarUsuarioCommand.Nome}");
             var resultado = await _mediator.Send(cadastrarUsuarioCommand);
 
             return Ok(resultado);
