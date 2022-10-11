@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using GestaoAcesso.API.Application.Command;
+using GestaoAcesso.API.Application.Command.CadastrarUsuario;
 
 namespace GestaoAcesso.API.Application.Validations
 {

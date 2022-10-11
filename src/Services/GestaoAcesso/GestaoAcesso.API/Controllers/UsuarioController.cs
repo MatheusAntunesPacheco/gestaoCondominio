@@ -1,29 +1,49 @@
-using GestaoAcesso.API.Application.Command;
+using GestaoAcesso.API.Application.Command.AutenticarUsuario;
+using GestaoAcesso.API.Application.Command.CadastrarUsuario;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoAcesso.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class UsuarioController : ControllerBase
+    [Route("usuarios")]
+    public class UsuariosController : ControllerBase
     {
-        private readonly ILogger<UsuarioController> _logger;
+        private readonly ILogger<UsuariosController> _logger;
         private readonly IMediator _mediator;
 
-        public UsuarioController(ILogger<UsuarioController> logger, IMediator mediator)
+        public UsuariosController(ILogger<UsuariosController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
         }
         
+        /// <summary>
+        /// Cadastrar usuário
+        /// </summary>
+        /// <param name="cadastrarUsuarioCommand"></param>
+        /// <returns></returns>
         [HttpPost]
+        [Route("")]
         public async Task<IActionResult> CadastrarUsuario(CadastrarUsuarioCommand cadastrarUsuarioCommand)
         {
-            _logger.LogInformation($"Cadastrando usuário {cadastrarUsuarioCommand.Nome}");
+            _logger.LogInformation($"[UsuarioController] Cadastrando usuário {cadastrarUsuarioCommand.Nome}");
             var resultado = await _mediator.Send(cadastrarUsuarioCommand);
 
             return Ok(resultado);
+        }
+
+        [HttpPost]
+        [Route("autenticacao")]
+        public async Task<IActionResult> AutenticarUsuario(AutenticarUsuarioCommand autenticarUsuarioCommand)
+        {
+            _logger.LogInformation($"[UsuarioController] Autenticando usuário {autenticarUsuarioCommand.Cpf}");
+            var resultado = await _mediator.Send(autenticarUsuarioCommand);
+
+            if (resultado)
+                return Ok();
+
+            return Unauthorized();
         }
     }
 }
