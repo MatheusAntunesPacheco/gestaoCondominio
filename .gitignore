@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 
 /src/Services/GestaoAcesso/GestaoAcesso.API/Properties/launchSettings.json
+/src/ApiGateways/Mobile.Bff/Mobile.BFF.API/Properties/launchSettings.json

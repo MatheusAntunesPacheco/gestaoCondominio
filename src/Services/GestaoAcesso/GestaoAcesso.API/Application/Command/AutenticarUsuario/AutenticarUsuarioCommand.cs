@@ -6,7 +6,7 @@ namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
     /// <summary>
     /// Requisição utilizada para criar novo usuario no sistema
     /// </summary>
-    public class AutenticarUsuarioCommand : IRequest<bool>
+    public class AutenticarUsuarioCommand : IRequest<AutenticarUsuarioResponse>
     {
 
         /// <summary>
