@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Mobile.BFF.API.Models;
+using Mobile.BFF.API.Services;
 
 namespace Mobile.BFF.API.Controllers
 {
@@ -8,10 +9,12 @@ namespace Mobile.BFF.API.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly ILogger<UsuariosController> _logger;
+        private readonly IGestaoAcessoService _gestaoAcessoService;
 
-        public UsuariosController(ILogger<UsuariosController> logger)
+        public UsuariosController(ILogger<UsuariosController> logger, IGestaoAcessoService gestaoAcessoService)
         {
             _logger = logger;
+            _gestaoAcessoService = gestaoAcessoService;
         }
 
         [HttpPost()]
@@ -19,8 +22,9 @@ namespace Mobile.BFF.API.Controllers
         public async Task<IActionResult> AutenticarUsuario([FromBody] AutenticacaoUsuarioRequest requisicao)
         {
             _logger.LogInformation($"Iniciando autenticação do usuário {requisicao.Cpf}");
+            var resultadoAutenticacao = await _gestaoAcessoService.AutenticarUsuario(requisicao);
 
-            return Ok(new AutenticacaoUsuarioResponse(true, DateTime.Now, DateTime.Now, "ABC"));
+            return Ok(resultadoAutenticacao);
         }
     }
 }
