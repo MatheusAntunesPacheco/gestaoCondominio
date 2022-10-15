@@ -1,5 +1,4 @@
-﻿using FluentValidation.Results;
-using MediatR;
+﻿using MediatR;
 
 namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
 {
