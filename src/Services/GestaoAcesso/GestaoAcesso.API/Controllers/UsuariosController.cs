@@ -1,3 +1,4 @@
+using GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil;
 using GestaoAcesso.API.Application.Command.AutenticarUsuario;
 using GestaoAcesso.API.Application.Command.CadastrarUsuario;
 using MediatR;
@@ -33,6 +34,11 @@ namespace GestaoAcesso.Controllers
             return Ok(resultado);
         }
 
+        /// <summary>
+        /// Autenticar usuário
+        /// </summary>
+        /// <param name="autenticarUsuarioCommand"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("autenticacao")]
         public async Task<IActionResult> AutenticarUsuario(AutenticarUsuarioCommand autenticarUsuarioCommand)
@@ -40,10 +46,28 @@ namespace GestaoAcesso.Controllers
             _logger.LogInformation($"[UsuarioController] Autenticando usuário {autenticarUsuarioCommand.Cpf}");
             var resultado = await _mediator.Send(autenticarUsuarioCommand);
 
-            if (resultado)
-                return Ok();
+            if (resultado.Autenticado)
+                return Ok(resultado);
 
-            return Unauthorized();
+            return Unauthorized(resultado);
+        }
+
+        /// <summary>
+        /// Autenticar usuário
+        /// </summary>
+        /// <param name="autenticarUsuarioCommand"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("perfil")]
+        public async Task<IActionResult> AssociarUsuarioAoPerfil(AssociarUsuarioPerfilCommand associarUsuarioPerfilCommand)
+        {
+            _logger.LogInformation($"[UsuarioController] Associando usuário {associarUsuarioPerfilCommand.Cpf} ao perfil para o condomínio {associarUsuarioPerfilCommand.IdCondominio}");
+            var resultado = await _mediator.Send(associarUsuarioPerfilCommand);
+
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
         }
     }
 }

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestaoAcesso.API", "Service
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{874C0705-90F8-4852-AB74-A239F333008C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BFF.API", "ApiGateways\Mobile.Bff\Mobile.BFF.API\Mobile.BFF.API.csproj", "{304AB36D-382A-4C3A-98C5-CEA284233FD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{7EA1931B-165B-4063-8807-3D5387045A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EA1931B-165B-4063-8807-3D5387045A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EA1931B-165B-4063-8807-3D5387045A54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{304AB36D-382A-4C3A-98C5-CEA284233FD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{304AB36D-382A-4C3A-98C5-CEA284233FD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{304AB36D-382A-4C3A-98C5-CEA284233FD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{304AB36D-382A-4C3A-98C5-CEA284233FD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
