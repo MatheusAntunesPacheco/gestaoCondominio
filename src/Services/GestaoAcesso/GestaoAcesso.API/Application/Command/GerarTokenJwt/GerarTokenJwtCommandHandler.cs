@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using GestaoAcesso.API.Entities;
+using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
@@ -6,6 +7,9 @@ using System.Text;
 
 namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
 {
+    /// <summary>
+    /// Geração de token JWT para autenticação do usuário
+    /// </summary>
     public class GerarTokenJwtCommandHandler : IRequestHandler<GerarTokenJwtCommand, GerarTokenJwtResponse>
     {
         private readonly ILogger<GerarTokenJwtCommandHandler> _logger;
@@ -22,6 +26,14 @@ namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
             var dataCriacao = DateTime.Now;
             var dataExpiracao = dataCriacao + Configuracao.Jwt.TempoExpiracaoToken;
 
+            var payload = new PayloadTokenJwt(
+                request.UsuarioAutenticado.Cpf, 
+                request.UsuarioAutenticado.Nome, 
+                VerificarSeUsuarioEhAdministradorGeral(request.PerfisUsuarioAutenticado),
+                request.PerfisUsuarioAutenticado.Where(u => u.Administrador && u.IdCondominio.HasValue).Select(u => u.IdCondominio.Value),
+                request.PerfisUsuarioAutenticado.Where(u => !u.Administrador && u.IdCondominio.HasValue).Select(u => u.IdCondominio.Value)
+            );
+
             var handler = new JwtSecurityTokenHandler();
             var securityToken = handler.CreateToken(new SecurityTokenDescriptor
             {
@@ -32,8 +44,7 @@ namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
                 Expires = dataExpiracao,
                 Claims = new Dictionary<string, object>()
                 {
-                    { "NomeUsuario", request.NomeUsuario },
-                    { "CpfUsuario", request.CpfUsuario }
+                    { "DadosUsuario", payload }
                 }
             });
             var token = handler.WriteToken(securityToken);
@@ -46,5 +57,7 @@ namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
             var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuracao.Jwt.ChaveSecreta));
             return new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);
         }
+
+        private bool VerificarSeUsuarioEhAdministradorGeral(IEnumerable<PerfilUsuario> listaPerfisUsuario) => listaPerfisUsuario.Any(u => !u.IdCondominio.HasValue && u.Administrador);
     }
 }

@@ -1,26 +1,27 @@
-﻿using MediatR;
+﻿using GestaoAcesso.API.Entities;
+using MediatR;
 
 namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
 {
     /// <summary>
-    /// Requisição utilizada para criptografar texto utilizado na api para senha de usuario
+    /// Requisição utilizada para gerar token JWT para autenticação do usuário
     /// </summary>
     public class GerarTokenJwtCommand : IRequest<GerarTokenJwtResponse>
     {
         /// <summary>
-        /// Nome do usuário autenticado
+        /// Usuário autenticado
         /// </summary>
-        public string NomeUsuario { get; private set; }
+        public Usuario UsuarioAutenticado { get; private set; }
 
         /// <summary>
-        /// CPF do usuário autenticado
+        /// Lista de perfis do usuario autenticado
         /// </summary>
-        public string CpfUsuario { get; private set; }
+        public IEnumerable<PerfilUsuario> PerfisUsuarioAutenticado { get; private set; }
 
-        public GerarTokenJwtCommand(string nomeUsuario, string cpfUsuario)
+        public GerarTokenJwtCommand(Usuario usuarioAutenticado, IEnumerable<PerfilUsuario> perfisUsuarioAutenticado)
         {
-            NomeUsuario = nomeUsuario;
-            CpfUsuario = cpfUsuario;
+            UsuarioAutenticado = usuarioAutenticado;
+            PerfisUsuarioAutenticado = perfisUsuarioAutenticado;
         }
     }
 }
