@@ -21,7 +21,7 @@ namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
         public async Task<GerarTokenJwtResponse> Handle(GerarTokenJwtCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("[GerarTokenJwtCommandHandler] Iniciando geração de token JWT");
-            var dataCriacao = DateTime.Now;
+            var dataCriacao = DateTime.UtcNow;
             var dataExpiracao = dataCriacao + Configuracao.Jwt.TempoExpiracaoToken;
 
             var payload = new PayloadTokenJwt(
