@@ -13,7 +13,6 @@ namespace GestaoAcesso.API.Infrastructure.EntityConfigurations
             usuarioConfiguration.Property(u => u.Nome);
             usuarioConfiguration.Property(u => u.SenhaCriptografada);
             usuarioConfiguration.Property(u => u.Email);
-
         }
     }
 }
