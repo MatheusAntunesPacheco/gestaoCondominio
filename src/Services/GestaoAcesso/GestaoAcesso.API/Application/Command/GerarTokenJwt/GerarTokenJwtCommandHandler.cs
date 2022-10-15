@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
@@ -13,11 +12,10 @@ namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
     public class GerarTokenJwtCommandHandler : IRequestHandler<GerarTokenJwtCommand, GerarTokenJwtResponse>
     {
         private readonly ILogger<GerarTokenJwtCommandHandler> _logger;
-        private readonly HashAlgorithm _hashAlgorithm;
+
         public GerarTokenJwtCommandHandler(ILogger<GerarTokenJwtCommandHandler> logger)
         {
             _logger = logger;
-            _hashAlgorithm = SHA512.Create();
         }
 
         public async Task<GerarTokenJwtResponse> Handle(GerarTokenJwtCommand request, CancellationToken cancellationToken)

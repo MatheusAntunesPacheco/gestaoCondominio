@@ -8,7 +8,7 @@ namespace GestaoAcesso.API.Entities
         /// Id do perfil
         /// </summary>
         [Column("id")]
-        public int Id { get; private set; }
+        public int? Id { get; private set; }
 
         /// <summary>
         /// CPF dp usuário
@@ -28,11 +28,16 @@ namespace GestaoAcesso.API.Entities
         [Column("idc_adm")]
         public bool Administrador { get; private set; }
 
-        public PerfilUsuario(int id, string cpf, int? idCondominio, bool administrador)
+        public PerfilUsuario(int? id, string cpf, int? idCondominio, bool administrador)
         {
             Id = id;
             Cpf = cpf;
             IdCondominio = idCondominio;
+            Administrador = administrador;
+        }
+
+        public void AtualizarIndicadorAdministrador(bool administrador)
+        {
             Administrador = administrador;
         }
     }

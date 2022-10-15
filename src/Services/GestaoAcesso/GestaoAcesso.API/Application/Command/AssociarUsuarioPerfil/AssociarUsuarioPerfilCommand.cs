@@ -29,7 +29,7 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
         /// Tokem do usuário que solicitou associação
         /// Apenas usuários administradores do condomínio podem fazer essa associação
         /// </summary>
-        public string TokenJwtUsuarioLogado { get; set; }
+        public string TokenJwtUsuarioLogado { get; private set; }
 
         public AssociarUsuarioPerfilCommand(string cpf, int? idCondominio, bool administrador, string tokenUsuarioLogado)
         {

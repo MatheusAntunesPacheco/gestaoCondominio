@@ -1,6 +1,7 @@
 using GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil;
 using GestaoAcesso.API.Application.Command.AutenticarUsuario;
 using GestaoAcesso.API.Application.Command.CadastrarUsuario;
+using GestaoAcesso.API.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,16 +54,23 @@ namespace GestaoAcesso.Controllers
         }
 
         /// <summary>
-        /// Autenticar usuário
+        /// Associar usuário a um perfil
         /// </summary>
-        /// <param name="autenticarUsuarioCommand"></param>
+        /// <param name="associarUsuarioPerfilCommand"></param>
         /// <returns></returns>
+        //[HttpPut]
         [HttpPost]
         [Route("perfil")]
-        public async Task<IActionResult> AssociarUsuarioAoPerfil(AssociarUsuarioPerfilCommand associarUsuarioPerfilCommand)
+        public async Task<IActionResult> AssociarUsuarioAoPerfil(AssociarUsuarioPerfilModel model)
         {
-            _logger.LogInformation($"[UsuarioController] Associando usuário {associarUsuarioPerfilCommand.Cpf} ao perfil para o condomínio {associarUsuarioPerfilCommand.IdCondominio}");
-            var resultado = await _mediator.Send(associarUsuarioPerfilCommand);
+            var toke = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJEYWRvc1VzdWFyaW8iOnsiQ3BmIjoiMDc2NjY5NjU2MTMiLCJOb21lIjoiTWF0aGV1cyBQYWNoZWNvIiwiQWRtaW5pc3RyYWRvckdlcmFsIjp0cnVlLCJDb25kb21pbmlvc0FkbWluaXN0cmFkb3IiOltdLCJDb25kb21pbmlvc1VzdWFyaW9Db211bSI6W119LCJuYmYiOjE2NjU4NDc1OTgsImV4cCI6MTY2NTkzMzk5OCwiaWF0IjoxNjY1ODQ3NTk4LCJpc3MiOiJhdXRlbnRpY2FjYW8tdXN1YXJpb3MiLCJhdWQiOiJnZXN0YW8tYWNlc3NvcyJ9.MDnQcUAVs2pXns6BeORi98NjvNhjzDVaQkddbqbWUmo";
+            _logger.LogInformation($"[UsuarioController] Associando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
+            var resultado = await _mediator.Send(new AssociarUsuarioPerfilCommand(
+                model.Cpf, 
+                model.IdCondominio, 
+                model.Administrador,
+                toke)
+            );
 
             if (resultado.Sucesso)
                 return Ok(resultado);
