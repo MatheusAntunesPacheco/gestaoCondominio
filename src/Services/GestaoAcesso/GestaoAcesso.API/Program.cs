@@ -1,7 +1,10 @@
 using FluentValidation;
+using GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil;
 using GestaoAcesso.API.Application.Command.AutenticarUsuario;
 using GestaoAcesso.API.Application.Command.CadastrarUsuario;
 using GestaoAcesso.API.Application.Command.CriptografarTexto;
+using GestaoAcesso.API.Application.Command.GerarTokenJwt;
+using GestaoAcesso.API.Application.Command.LerTokenJwt;
 using GestaoAcesso.API.Filters;
 using GestaoAcesso.API.Infrastructure;
 using GestaoAcesso.API.Infrastructure.Interfaces;
@@ -23,6 +26,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMediatR(typeof(CadastrarUsuarioCommand));
 builder.Services.AddMediatR(typeof(CriptografarTextoCommand));
 builder.Services.AddMediatR(typeof(AutenticarUsuarioCommand));
+builder.Services.AddMediatR(typeof(AssociarUsuarioPerfilCommand));
+builder.Services.AddMediatR(typeof(GerarTokenJwtCommand));
+builder.Services.AddMediatR(typeof(LerPayloadTokenJwtCommand));
 
 AssemblyScanner.FindValidatorsInAssembly(typeof(CadastrarUsuarioCommand).Assembly)
   .ForEach(item => builder.Services.AddScoped(item.InterfaceType, item.ValidatorType));
@@ -58,6 +64,7 @@ ServiceLifetime.Transient);
 #region Adicionar Repositorios
 
 builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
+builder.Services.AddScoped<IPerfisUsuariosRepository, PerfisUsuariosRepository>();
 
 #endregion
 

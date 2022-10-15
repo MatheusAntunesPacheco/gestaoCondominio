@@ -1,7 +1,7 @@
 ﻿namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
 {
     /// <summary>
-    /// Requisição utilizada para criptografar texto utilizado na api para senha de usuario
+    /// Token gerado para usuário autenticado
     /// </summary>
     public class GerarTokenJwtResponse
     {

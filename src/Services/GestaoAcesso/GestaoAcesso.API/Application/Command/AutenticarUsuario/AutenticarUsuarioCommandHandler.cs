@@ -10,14 +10,17 @@ namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
     {
         private readonly ILogger<AutenticarUsuarioCommandHandler> _logger;
         private readonly IValidator<AutenticarUsuarioCommand> _validator;
-        private readonly IUsuariosRepository _usuarioRepository;
+        private readonly IUsuariosRepository _usuariosRepository;
+        private readonly IPerfisUsuariosRepository _perfisUsuariosRepository;
         private readonly IMediator _mediator;
 
-        public AutenticarUsuarioCommandHandler(ILogger<AutenticarUsuarioCommandHandler> logger, IValidator<AutenticarUsuarioCommand> validator, IUsuariosRepository usuarioRepository, IMediator mediator)
+        public AutenticarUsuarioCommandHandler(ILogger<AutenticarUsuarioCommandHandler> logger, IValidator<AutenticarUsuarioCommand> validator, IUsuariosRepository usuarioRepository, 
+            IPerfisUsuariosRepository perfisUsuariosRepository, IMediator mediator)
         {
             _logger = logger;
             _validator = validator;
-            _usuarioRepository = usuarioRepository;
+            _usuariosRepository = usuarioRepository;
+            _perfisUsuariosRepository = perfisUsuariosRepository;
             _mediator = mediator;
         }
         public async Task<AutenticarUsuarioResponse> Handle(AutenticarUsuarioCommand request, CancellationToken cancellationToken)
@@ -31,7 +34,7 @@ namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
             }
 
             _logger.LogInformation($"[AutenticarUsuarioCommandHandler] Consultando usuário {request.Cpf}");
-            var usuario = await _usuarioRepository.ObterPorCpf(request.Cpf);
+            var usuario = await _usuariosRepository.ObterPorCpf(request.Cpf);
             if (usuario == null)
             {
                 _logger.LogWarning($"[AutenticarUsuarioCommandHandler] Usuário {request.Cpf} não está cadastrado no banco de dados");
@@ -47,8 +50,11 @@ namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
                 return new AutenticarUsuarioResponse(false);
             }
 
-            _logger.LogInformation($"[AutenticarUsuarioCommandHandler] Usuário {request.Cpf} autenticado com sucesso. Iniciando geração de JWT");
-            var tokenJwt = await _mediator.Send(new GerarTokenJwtCommand(usuario.Nome, usuario.Cpf));
+            _logger.LogInformation($"[AutenticarUsuarioCommandHandler] Usuário {request.Cpf} autenticado com sucesso. Obtendo perfis do usuario");
+            var perfisUsuario = _perfisUsuariosRepository.ListarPorCpf(request.Cpf);
+
+            _logger.LogInformation($"[AutenticarUsuarioCommandHandler] Gerando token JWT do usuário {request.Cpf}");
+            var tokenJwt = await _mediator.Send(new GerarTokenJwtCommand(usuario, perfisUsuario));
 
             return new AutenticarUsuarioResponse(true, tokenJwt.Token, tokenJwt.DataCriacaoToken, tokenJwt.DataCriacaoToken);
         }
