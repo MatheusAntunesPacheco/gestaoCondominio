@@ -23,6 +23,26 @@ namespace Mobile.BFF.API.Controllers
             _gestaoAcessoService = gestaoAcessoService;
         }
 
+        /// <summary>
+        /// Cadastrar usuário
+        /// </summary>
+        /// <param name="cadastrarUsuarioModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("")]
+        public async Task<IActionResult> CadastrarUsuario(CriacaoUsuariolRequest requisicao)
+        {
+            _logger.LogInformation($"[UsuarioController] Cadastrando usuário {requisicao.Nome}");
+            var resultado = await _gestaoAcessoService.CriarUsuario(requisicao);
+
+            return Ok(resultado);
+        }
+
+        /// <summary>
+        /// Rota para autenticar um usuário no sistema e gerar o Tokem JWT
+        /// </summary>
+        /// <param name="requisicao"></param>
+        /// <returns></returns>
         [HttpPost()]
         [Route("autenticacao")]
         public async Task<IActionResult> AutenticarUsuario([FromBody] AutenticarUsuarioCommand requisicao)

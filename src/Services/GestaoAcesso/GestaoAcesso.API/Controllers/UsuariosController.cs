@@ -23,8 +23,7 @@ namespace GestaoAcesso.Controllers
         /// <summary>
         /// Cadastrar usuário
         /// </summary>
-        /// <param name="authorization">Header Authorizarion JWT</param>
-        /// <param name="cadastrarUsuarioCommand"></param>
+        /// <param name="cadastrarUsuarioModel"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("")]

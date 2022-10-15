@@ -15,6 +15,12 @@ namespace Mobile.BFF.API.Services
             _gestaoAcessoClient = gestaoAcessoClient;
         }
 
+        public async Task<ProcessamentoBaseResponse> CriarUsuario(CriacaoUsuariolRequest requisicao)
+        {
+            _logger.LogInformation($"[GestaoAcessoService] Iniciar criação de novo usuário");
+            return await _gestaoAcessoClient.CriarUsuario(requisicao);
+        }
+
         public async Task<AutenticacaoUsuarioResponse> AutenticarUsuario(AutenticacaoUsuarioRequest requisicao)
         {
             _logger.LogInformation($"[GestaoAcessoService] Iniciar verificação de autenticação de usuário");

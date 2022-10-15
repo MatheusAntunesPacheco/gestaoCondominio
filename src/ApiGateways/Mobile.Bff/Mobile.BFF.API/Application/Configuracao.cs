@@ -1,4 +1,4 @@
-﻿namespace Mobile.BFF.API.Config
+﻿namespace Mobile.BFF.API.Application
 {
     public static class Configuracao
     {
@@ -15,7 +15,8 @@
             public static class ApiGestaoAcesso
             {
                 public static readonly string UrlBasePath = Environment.GetEnvironmentVariable("URL_API_GESTAO_ACESSO");
-                public static readonly string AutenticarUsuario = "usuarios/autenticacao";
+                public static readonly string CriacaoUsuario = "usuarios";
+                public static readonly string AutenticacaoUsuario = "usuarios/autenticacao";
                 public static readonly string AssociacaoUsuario = "usuarios/perfil";
             }
         }

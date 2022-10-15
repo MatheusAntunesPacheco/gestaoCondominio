@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.IdentityModel.Tokens;
-using Mobile.BFF.API.Config;
 using Mobile.BFF.API.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;

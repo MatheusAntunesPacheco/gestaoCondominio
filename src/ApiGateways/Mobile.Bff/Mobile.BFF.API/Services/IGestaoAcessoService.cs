@@ -6,6 +6,7 @@ namespace Mobile.BFF.API.Services
 {
     public interface IGestaoAcessoService
     {
+        Task<ProcessamentoBaseResponse> CriarUsuario(CriacaoUsuariolRequest requisicao);
         Task<AutenticacaoUsuarioResponse> AutenticarUsuario(AutenticacaoUsuarioRequest requisicao);
         Task<ProcessamentoBaseResponse> AssociarUsuarioAUmPerfil(AssociacaoUsuarioPerfilRequest model);
     }
