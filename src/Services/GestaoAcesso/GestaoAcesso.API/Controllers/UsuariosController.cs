@@ -43,7 +43,7 @@ namespace GestaoAcesso.Controllers
             if (resultado.Autenticado)
                 return Ok(resultado);
 
-            return Unauthorized();
+            return Unauthorized(resultado);
         }
     }
 }

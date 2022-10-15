@@ -24,7 +24,10 @@ namespace Mobile.BFF.API.Controllers
             _logger.LogInformation($"Iniciando autenticação do usuário {requisicao.Cpf}");
             var resultadoAutenticacao = await _gestaoAcessoService.AutenticarUsuario(requisicao);
 
-            return Ok(resultadoAutenticacao);
+            if (resultadoAutenticacao.Autenticado)
+                return Ok(resultadoAutenticacao);
+
+            return Unauthorized(resultadoAutenticacao);
         }
     }
 }

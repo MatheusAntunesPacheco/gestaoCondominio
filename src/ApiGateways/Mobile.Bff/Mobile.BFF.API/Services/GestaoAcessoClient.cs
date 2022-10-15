@@ -23,7 +23,6 @@ namespace Mobile.BFF.API.Services
             var conteudo = new StringContent(JsonSerializer.Serialize(requisicao), Encoding.UTF8, "application/json");
             var resposta = await _httpClient.PostAsync(uri, conteudo);
 
-            resposta.EnsureSuccessStatusCode();
             var tokenAutenticacao = await resposta.Content.ReadAsStringAsync();
 
             return JsonSerializer.Deserialize<AutenticacaoUsuarioResponse>(tokenAutenticacao, new JsonSerializerOptions
