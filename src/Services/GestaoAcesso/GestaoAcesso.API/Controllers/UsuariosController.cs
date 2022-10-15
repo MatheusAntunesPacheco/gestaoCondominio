@@ -40,10 +40,10 @@ namespace GestaoAcesso.Controllers
             _logger.LogInformation($"[UsuarioController] Autenticando usuário {autenticarUsuarioCommand.Cpf}");
             var resultado = await _mediator.Send(autenticarUsuarioCommand);
 
-            if (resultado)
-                return Ok();
+            if (resultado.Autenticado)
+                return Ok(resultado);
 
-            return Unauthorized();
+            return Unauthorized(resultado);
         }
     }
 }

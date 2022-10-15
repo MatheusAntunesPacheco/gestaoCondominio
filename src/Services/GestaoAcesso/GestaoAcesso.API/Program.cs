@@ -55,7 +55,7 @@ ServiceLifetime.Transient);
 
 #endregion
 
-#region AdicionarRepositorios
+#region Adicionar Repositorios
 
 builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
 
