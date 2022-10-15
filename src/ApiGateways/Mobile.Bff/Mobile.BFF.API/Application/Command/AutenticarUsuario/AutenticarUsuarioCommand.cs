@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
+namespace Mobile.BFF.API.Application.Command.AutenticarUsuario
 {
     /// <summary>
     /// Requisição utilizada para criar novo usuario no sistema

@@ -1,7 +1,7 @@
-﻿using GestaoAcesso.API.Entities;
-using MediatR;
+﻿using MediatR;
+using Mobile.BFF.API.Entities;
 
-namespace GestaoAcesso.API.Application.Command.LerTokenJwt
+namespace Mobile.BFF.API.Application.Command.LerTokenJwt
 {
     /// <summary>
     /// Leitura do paload do token JWT

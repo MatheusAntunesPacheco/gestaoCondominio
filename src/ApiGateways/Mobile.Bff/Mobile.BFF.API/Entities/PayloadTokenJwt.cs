@@ -1,4 +1,4 @@
-﻿namespace GestaoAcesso.API.Entities
+﻿namespace Mobile.BFF.API.Entities
 {
     public class PayloadTokenJwt
     {
@@ -30,14 +30,17 @@
         /// <summary>
         /// Construtor da entidade PayloadTokenJwt
         /// </summary>
-        /// <param name="cpf">CPF do usuário</param>
-        /// <param name="nome">Nome do usuário</param>
-        public PayloadTokenJwt(string cpf, string nome, bool administradorGeral, IEnumerable<int> condominiosUsuarioAdministrador, IEnumerable<int> condominiosUsuarioComum)
+        /// <param name="cpf"></param>
+        /// <param name="nome"></param>
+        /// <param name="administradorGeral"></param>
+        /// <param name="condominiosAdministrador"></param>
+        /// <param name="condominiosUsuarioComum"></param>
+        public PayloadTokenJwt(string cpf, string nome, bool administradorGeral, IEnumerable<int> condominiosAdministrador, IEnumerable<int> condominiosUsuarioComum)
         {
             Cpf = cpf;
             Nome = nome;
             AdministradorGeral = administradorGeral;
-            CondominiosAdministrador = condominiosUsuarioAdministrador; 
+            CondominiosAdministrador = condominiosAdministrador; 
             CondominiosUsuarioComum = condominiosUsuarioComum;
         }
 

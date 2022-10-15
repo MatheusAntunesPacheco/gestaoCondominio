@@ -1,11 +1,11 @@
 ﻿using MediatR;
 
-namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
+namespace GestaoAcesso.API.Application.Command.DesassociarUsuarioPerfil
 {
     /// <summary>
     /// Requisição utilizada para criar novo usuario no sistema
     /// </summary>
-    public class AssociarUsuarioPerfilCommand : IRequest<ProcessamentoBaseResponse>
+    public class DesassociarUsuarioPerfilCommand : IRequest<ProcessamentoBaseResponse>
     {
 
         /// <summary>
@@ -21,21 +21,15 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
         public int? IdCondominio { get; private set; }
 
         /// <summary>
-        /// Atributo que indica se o usuário será administrador do condomínio
-        /// </summary>
-        public bool Administrador { get; private set; }
-
-        /// <summary>
         /// Cpf do usuário que solicitou associação
         /// Apenas usuários administradores do condomínio podem fazer essa associação
         /// </summary>
         public string CpfUsuarioLogado { get; private set; }
 
-        public AssociarUsuarioPerfilCommand(string cpf, int? idCondominio, bool administrador, string cpfUsuarioLogado)
+        public DesassociarUsuarioPerfilCommand(string cpf, int? idCondominio, string cpfUsuarioLogado)
         {
             Cpf = cpf;
             IdCondominio = idCondominio;
-            Administrador = administrador;
             CpfUsuarioLogado = cpfUsuarioLogado;
         }
     }

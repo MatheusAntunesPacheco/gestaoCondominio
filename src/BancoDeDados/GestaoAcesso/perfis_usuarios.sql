@@ -4,10 +4,12 @@ GO
 
 CREATE TABLE dbo.perfis_usuarios
 	(
-	if_perfil     INT IDENTITY PRIMARY KEY NOT NULL,
+	id     		  INT IDENTITY PRIMARY KEY NOT NULL,
 	txt_cpf       CHAR (11) NOT NULL,
 	id_condominio INT NULL,
-	idc_adm       BIT DEFAULT ((0)) NOT NULL
+	idc_adm       BIT DEFAULT ((0)) NOT NULL,
+	txt_cpf_alteracao CHAR (11) NOT NULL,
+	dt_alteracao DATETIME NOT NULL DEFAULT getdate()
 	)
 GO
 

@@ -1,13 +1,7 @@
-﻿using MediatR;
-
-namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
+﻿namespace Mobile.BFF.API.Services.Models
 {
-    /// <summary>
-    /// Requisição utilizada para criar novo usuario no sistema
-    /// </summary>
-    public class AssociarUsuarioPerfilCommand : IRequest<ProcessamentoBaseResponse>
+    public class AssociacaoUsuarioPerfilRequest
     {
-
         /// <summary>
         /// CPF do usuario
         /// </summary>
@@ -26,12 +20,11 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
         public bool Administrador { get; private set; }
 
         /// <summary>
-        /// Cpf do usuário que solicitou associação
-        /// Apenas usuários administradores do condomínio podem fazer essa associação
+        /// Cpf do usuário logado, para saber se ele possui permissão para realizar essa associação
         /// </summary>
         public string CpfUsuarioLogado { get; private set; }
 
-        public AssociarUsuarioPerfilCommand(string cpf, int? idCondominio, bool administrador, string cpfUsuarioLogado)
+        public AssociacaoUsuarioPerfilRequest(string cpf, int? idCondominio, bool administrador, string cpfUsuarioLogado)
         {
             Cpf = cpf;
             IdCondominio = idCondominio;

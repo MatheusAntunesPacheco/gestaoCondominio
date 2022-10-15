@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using GestaoAcesso.API.Application.Command.CriptografarTexto;
-using GestaoAcesso.API.Application.Command.GerarTokenJwt;
 using GestaoAcesso.API.Infrastructure.Interfaces;
 using MediatR;
 
@@ -53,10 +52,11 @@ namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
             _logger.LogInformation($"[AutenticarUsuarioCommandHandler] Usuário {request.Cpf} autenticado com sucesso. Obtendo perfis do usuario");
             var perfisUsuario = _perfisUsuariosRepository.ListarPorCpf(request.Cpf);
 
-            _logger.LogInformation($"[AutenticarUsuarioCommandHandler] Gerando token JWT do usuário {request.Cpf}");
-            var tokenJwt = await _mediator.Send(new GerarTokenJwtCommand(usuario, perfisUsuario));
+            bool usuarioAdministradorGeral = perfisUsuario.Any(p => p.Administrador && !p.IdCondominio.HasValue);
+            var listaCondominiosUsuarioAdministrador = perfisUsuario.Where(p => p.Administrador && p.IdCondominio.HasValue).Select(p => p.IdCondominio.Value);
+            var listaCondominiosUsuarioComum = perfisUsuario.Where(p => !p.Administrador && p.IdCondominio.HasValue).Select(p => p.IdCondominio.Value);
 
-            return new AutenticarUsuarioResponse(true, tokenJwt.Token, tokenJwt.DataCriacaoToken, tokenJwt.DataCriacaoToken);
+            return new AutenticarUsuarioResponse(true, usuario.Cpf, usuario.Nome, usuarioAdministradorGeral, listaCondominiosUsuarioAdministrador, listaCondominiosUsuarioComum);
         }
 
         private async Task<string> CriptografarSenha(string senha)

@@ -20,6 +20,20 @@ namespace GestaoAcesso.API.Infrastructure.Repositories
             return usuarioCadastrado.Entity;
         }
 
+        public PerfilUsuario Atualizar(PerfilUsuario perfilUsuario)
+        {
+            var perfilAtualizado = _context.PerfisUsuario.Update(perfilUsuario).Entity;
+            _context.SaveChanges();
+
+            return perfilAtualizado;
+        }
+
+        public void Remover(PerfilUsuario perfilUsuario)
+        {
+            _context.Remove(perfilUsuario);
+            _context.SaveChanges();
+        }
+
         public IEnumerable<PerfilUsuario> ListarPorCpf(string cpf) => _context.PerfisUsuario.Where(u => u.Cpf == cpf);
     }
 }

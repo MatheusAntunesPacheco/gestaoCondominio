@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GestaoAcesso.API.Filters
+namespace Mobile.BFF.API.Filters
 {
     [ExcludeFromCodeCoverage]
     public class DefaultExceptionFilterAttribute : ExceptionFilterAttribute
@@ -11,15 +11,6 @@ namespace GestaoAcesso.API.Filters
 
         public override void OnException(ExceptionContext context)
         {
-            if (context.Exception is FluentValidation.ValidationException)
-            {
-                context.Result = new ObjectResult(new { erro = context.Exception.Message })
-                {
-                    StatusCode = StatusCodes.Status400BadRequest
-                };
-                return;
-            }
-
             context.Result = new ObjectResult(new { erro = DEFAULT_EXCEPTION })
             {
                 StatusCode = StatusCodes.Status500InternalServerError

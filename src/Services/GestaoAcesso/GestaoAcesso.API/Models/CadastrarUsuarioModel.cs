@@ -1,12 +1,6 @@
-﻿using FluentValidation.Results;
-using MediatR;
-
-namespace GestaoAcesso.API.Application.Command.CadastrarUsuario
+﻿namespace GestaoAcesso.API.Models
 {
-    /// <summary>
-    /// Requisição utilizada para criar novo usuario no sistema
-    /// </summary>
-    public class CadastrarUsuarioCommand : IRequest<ProcessamentoBaseResponse>
+    public class CadastrarUsuarioModel
     {
         /// <summary>
         /// Nome do usuario
@@ -28,7 +22,7 @@ namespace GestaoAcesso.API.Application.Command.CadastrarUsuario
         /// </summary>
         public string Email { get; private set; }
 
-        public CadastrarUsuarioCommand(
+        public CadastrarUsuarioModel(
             string nome,
             string cpf,
             string senha,

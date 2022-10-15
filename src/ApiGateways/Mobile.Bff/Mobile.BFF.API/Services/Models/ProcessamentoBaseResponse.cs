@@ -1,4 +1,4 @@
-﻿namespace GestaoAcesso.API.Application.Command
+﻿namespace Mobile.BFF.API.Application.Command
 {
     /// <summary>
     /// Requisição utilizada para criptografar texto utilizado na api para senha de usuario

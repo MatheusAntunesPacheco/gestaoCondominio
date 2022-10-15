@@ -7,7 +7,7 @@ using MediatR;
 
 namespace GestaoAcesso.API.Application.Command.CadastrarUsuario
 {
-    public class CadastrarUsuarioCommandHandler : IRequestHandler<CadastrarUsuarioCommand, ValidationResult>
+    public class CadastrarUsuarioCommandHandler : IRequestHandler<CadastrarUsuarioCommand, ProcessamentoBaseResponse>
     {
         private readonly ILogger<CadastrarUsuarioCommandHandler> _logger;
         private readonly IValidator<CadastrarUsuarioCommand> _validator;
@@ -21,27 +21,27 @@ namespace GestaoAcesso.API.Application.Command.CadastrarUsuario
             _usuarioRepository = usuarioRepository;
             _mediator = mediator;
         }
-        public async Task<ValidationResult> Handle(CadastrarUsuarioCommand request, CancellationToken cancellationToken)
+        public async Task<ProcessamentoBaseResponse> Handle(CadastrarUsuarioCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"[CadastrarUsuarioCommandHandler] Iniciando cadastro do usuário {request.Cpf}");
             var validacao = await _validator.ValidateAsync(request);
             if (!validacao.IsValid)
             {
                 _logger.LogWarning($"[CadastrarUsuarioCommandHandler] Requisição para cadastro do usuário {request.Cpf} não está valida: {string.Join(" | ", validacao.Errors.Select(e => e.ErrorMessage))}");
-                return validacao;
+                return new ProcessamentoBaseResponse(false, string.Join(" | ", validacao.Errors.Select(e => e.ErrorMessage)));
             }
 
             if (await UsuarioJaCadastrado(request.Cpf))
             {
                 _logger.LogWarning($"[CadastrarUsuarioCommandHandler] Usuário {request.Cpf} ja está cadastrado no banco de dados");
                 validacao.Errors.Add(new ValidationFailure("Cpf", "Usuário ja foi cadastrado anteriormente com este Cpf"));
-                return validacao;
+                return new ProcessamentoBaseResponse(false, "Usuário ja foi cadastrado anteriormente com este Cpf");
             }
 
             var senhaCriptografada = await CriptografarSenha(request.Senha);
-            var usuario = await CadastrarUsuarioNoBanco(request, senhaCriptografada);
+            await CadastrarUsuarioNoBanco(request, senhaCriptografada);
 
-            return validacao;
+            return new ProcessamentoBaseResponse(true, string.Empty);
         }
 
         private async Task<bool> UsuarioJaCadastrado(string cpf)
