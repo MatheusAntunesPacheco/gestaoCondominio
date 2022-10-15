@@ -1,9 +1,9 @@
-﻿using GestaoAcesso.API.Entities;
-using MediatR;
+﻿using MediatR;
+using Mobile.BFF.API.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 
-namespace GestaoAcesso.API.Application.Command.LerTokenJwt
+namespace Mobile.BFF.API.Application.Command.LerTokenJwt
 {
     public class LerPayloadTokenJwtCommandHandler : IRequestHandler<LerPayloadTokenJwtCommand, PayloadTokenJwt>
     {

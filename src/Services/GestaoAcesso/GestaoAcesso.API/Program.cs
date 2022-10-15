@@ -4,9 +4,6 @@ using GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil;
 using GestaoAcesso.API.Application.Command.AutenticarUsuario;
 using GestaoAcesso.API.Application.Command.CadastrarUsuario;
 using GestaoAcesso.API.Application.Command.CriptografarTexto;
-using GestaoAcesso.API.Application.Command.GerarTokenJwt;
-using GestaoAcesso.API.Application.Command.LerTokenJwt;
-using GestaoAcesso.API.Filters;
 using GestaoAcesso.API.Infrastructure;
 using GestaoAcesso.API.Infrastructure.Interfaces;
 using GestaoAcesso.API.Infrastructure.Repositories;
@@ -23,7 +20,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddMvc(options => options.Filters.Add(new DefaultExceptionFilterAttribute()));
 builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -33,8 +29,6 @@ builder.Services.AddMediatR(typeof(CadastrarUsuarioCommand));
 builder.Services.AddMediatR(typeof(CriptografarTextoCommand));
 builder.Services.AddMediatR(typeof(AutenticarUsuarioCommand));
 builder.Services.AddMediatR(typeof(AssociarUsuarioPerfilCommand));
-builder.Services.AddMediatR(typeof(GerarTokenJwtCommand));
-builder.Services.AddMediatR(typeof(LerPayloadTokenJwtCommand));
 
 AssemblyScanner.FindValidatorsInAssembly(typeof(CadastrarUsuarioCommand).Assembly)
   .ForEach(item => builder.Services.AddScoped(item.InterfaceType, item.ValidatorType));

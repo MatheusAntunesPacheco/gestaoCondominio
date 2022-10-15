@@ -67,18 +67,17 @@ namespace GestaoAcesso.Controllers
         /// </summary>
         /// <param name="associarUsuarioPerfilCommand"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPut]
         [HttpPost]
         [Route("perfil")]
-        public async Task<IActionResult> AssociarUsuarioAoPerfil([FromHeader] string authorization, AssociarUsuarioPerfilModel model)
+        public async Task<IActionResult> AssociarUsuarioAoPerfil(AssociarUsuarioPerfilModel model)
         {
             _logger.LogInformation($"[UsuarioController] Associando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
             var resultado = await _mediator.Send(new AssociarUsuarioPerfilCommand(
                 model.Cpf, 
                 model.IdCondominio, 
                 model.Administrador,
-                authorization[7..])
+                model.CpfUsuarioLogado)
             );
 
             if (resultado.Sucesso)

@@ -1,4 +1,4 @@
-﻿namespace GestaoAcesso.API.Application.Command.GerarTokenJwt
+﻿namespace Mobile.BFF.API.Application.Command.GerarTokenJwt
 {
     /// <summary>
     /// Token gerado para usuário autenticado

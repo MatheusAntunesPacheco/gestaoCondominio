@@ -19,13 +19,11 @@ namespace Mobile.BFF.API.Services
         public async Task<AutenticacaoUsuarioResponse> AutenticarUsuario(AutenticacaoUsuarioRequest requisicao)
         {
             _logger.LogInformation($"[GestaoAcessoClient] Iniciar requisição HTTP para autenticação de usuário");
-            var uri = UrlsConfig.GestaoAcesso.UrlBasePath + UrlsConfig.GestaoAcesso.AutenticarUsuario;
+            var uri = Configuracao.Url.ApiGestaoAcesso.UrlBasePath + Configuracao.Url.ApiGestaoAcesso.AutenticarUsuario;
             var conteudo = new StringContent(JsonSerializer.Serialize(requisicao), Encoding.UTF8, "application/json");
             var resposta = await _httpClient.PostAsync(uri, conteudo);
 
-            var tokenAutenticacao = await resposta.Content.ReadAsStringAsync();
-
-            return JsonSerializer.Deserialize<AutenticacaoUsuarioResponse>(tokenAutenticacao, new JsonSerializerOptions
+            return JsonSerializer.Deserialize<AutenticacaoUsuarioResponse>(await resposta.Content.ReadAsStringAsync(), new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });

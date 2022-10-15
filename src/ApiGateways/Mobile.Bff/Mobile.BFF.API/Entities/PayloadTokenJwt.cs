@@ -1,4 +1,4 @@
-﻿namespace GestaoAcesso.API.Entities
+﻿namespace Mobile.BFF.API.Entities
 {
     public class PayloadTokenJwt
     {

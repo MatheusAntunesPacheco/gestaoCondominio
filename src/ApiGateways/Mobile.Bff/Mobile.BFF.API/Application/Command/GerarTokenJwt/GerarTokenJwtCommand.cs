@@ -1,9 +1,11 @@
-﻿namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
+﻿using MediatR;
+
+namespace Mobile.BFF.API.Application.Command.GerarTokenJwt
 {
     /// <summary>
-    /// Requisição utilizada para criptografar texto utilizado na api para senha de usuario
+    /// Requisição utilizada para gerar token JWT para autenticação do usuário
     /// </summary>
-    public class AutenticarUsuarioResponse
+    public class GerarTokenJwtCommand : IRequest<GerarTokenJwtResponse>
     {
         /// <summary>
         /// Atributo que identifica se usuário foi autenticado
@@ -35,19 +37,13 @@
         /// </summary>
         public IEnumerable<int> CondominiosUsuarioComum { get; private set; }
 
-        public AutenticarUsuarioResponse(bool autenticado, string cpf, string nome, bool administradorGeral, IEnumerable<int> condominiosAdministrador, IEnumerable<int> condominiosUsuarioComum)
+        public GerarTokenJwtCommand(string cpf, string nome, bool administradorGeral, IEnumerable<int> condominiosAdministrador, IEnumerable<int> condominiosUsuarioComum)
         {
-            Autenticado = autenticado;
             Cpf = cpf;
             Nome = nome;
             AdministradorGeral = administradorGeral;
             CondominiosAdministrador = condominiosAdministrador;
             CondominiosUsuarioComum = condominiosUsuarioComum;
-        }
-
-        public AutenticarUsuarioResponse(bool autenticado)
-        {
-            Autenticado = autenticado;
         }
     }
 }

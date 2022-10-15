@@ -28,12 +28,19 @@ namespace GestaoAcesso.API.Entities
         [Column("idc_adm")]
         public bool Administrador { get; private set; }
 
-        public PerfilUsuario(int? id, string cpf, int? idCondominio, bool administrador)
+        /// <summary>
+        /// CPF do usuário responsável pela alteração
+        /// </summary>
+        [Column("txt_cpf_alteracao")]
+        public string CpfUsuarioAlteracao { get; private set; }
+
+        public PerfilUsuario(int? id, string cpf, int? idCondominio, bool administrador, string cpfUsuarioAlteracao)
         {
             Id = id;
             Cpf = cpf;
             IdCondominio = idCondominio;
             Administrador = administrador;
+            CpfUsuarioAlteracao = cpfUsuarioAlteracao;
         }
 
         public void AtualizarIndicadorAdministrador(bool administrador)

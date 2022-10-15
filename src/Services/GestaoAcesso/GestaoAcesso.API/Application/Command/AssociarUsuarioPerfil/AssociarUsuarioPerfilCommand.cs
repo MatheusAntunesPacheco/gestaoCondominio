@@ -26,17 +26,17 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
         public bool Administrador { get; private set; }
 
         /// <summary>
-        /// Tokem do usuário que solicitou associação
+        /// Cpf do usuário que solicitou associação
         /// Apenas usuários administradores do condomínio podem fazer essa associação
         /// </summary>
-        public string TokenJwtUsuarioLogado { get; private set; }
+        public string CpfUsuarioLogado { get; private set; }
 
-        public AssociarUsuarioPerfilCommand(string cpf, int? idCondominio, bool administrador, string tokenUsuarioLogado)
+        public AssociarUsuarioPerfilCommand(string cpf, int? idCondominio, bool administrador, string cpfUsuarioLogado)
         {
             Cpf = cpf;
             IdCondominio = idCondominio;
             Administrador = administrador;
-            TokenJwtUsuarioLogado = tokenUsuarioLogado;
+            CpfUsuarioLogado = cpfUsuarioLogado;
         }
     }
 }

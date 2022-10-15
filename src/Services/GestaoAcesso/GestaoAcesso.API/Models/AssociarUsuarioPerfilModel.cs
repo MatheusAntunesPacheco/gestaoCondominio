@@ -18,5 +18,10 @@
         /// Atributo que indica se o usuário será administrador do condomínio
         /// </summary>
         public bool Administrador { get; set; }
+
+        /// <summary>
+        /// Cpf do usuário logado, para saber se ele possui permissão para realizar essa associação
+        /// </summary>
+        public string CpfUsuarioLogado { get; set; }
     }
 }

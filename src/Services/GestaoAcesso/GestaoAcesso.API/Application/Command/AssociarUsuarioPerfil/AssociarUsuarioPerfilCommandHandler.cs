@@ -1,5 +1,4 @@
-﻿using GestaoAcesso.API.Application.Command.LerTokenJwt;
-using GestaoAcesso.API.Entities;
+﻿using GestaoAcesso.API.Entities;
 using GestaoAcesso.API.Infrastructure.Interfaces;
 using MediatR;
 
@@ -31,14 +30,7 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
                 return new ProcessamentoBaseResponse(false, "Usuário não cadastrado no banco de dados");
             }
 
-            var conteudoTokenUsuarioLogado = await _mediator.Send(new LerPayloadTokenJwtCommand(request.TokenJwtUsuarioLogado));
-            if (conteudoTokenUsuarioLogado == null)
-            {
-                _logger.LogWarning("[AssociarUsuarioPerfilCommandHandler] Não foi possível fazer leitura do payload do token JWT");
-                return new ProcessamentoBaseResponse(false, "Não foi possível fazer leitura do payload do token do usuário logado");
-            }
-
-            if (!VerificarSeUsuarioLogadoPodeEfetuarAssociacao(conteudoTokenUsuarioLogado, request))
+            if (!VerificarSeUsuarioLogadoPodeEfetuarAssociacao(request))
             {
                 _logger.LogWarning($"[AssociarUsuarioPerfilCommandHandler] Usuario {request.Cpf} não tem permissão para cadastrar o usuário a esse perfil");
                 return new ProcessamentoBaseResponse(false, "Usuario não tem permissão para cadastrar o usuário a esse perfil");
@@ -56,16 +48,22 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
         ///     Só poderá associar um usuário ao perfil (seja ele morador comum ou admin) aquele usuário que for administrador do condominio
         ///     Só poderá associar um usuário ao perfil de administrador geral aquele usuario que for administrador geral
         /// </summary>
-        /// <param name="payloadToken">Payload Token JWT do usuário logado</param>
+        /// <param name="usuarioLogado">Usuário logado</param>
         /// <param name="request">Requisição para associação do usuario com um perfil</param>
         /// <returns></returns>
-        private bool VerificarSeUsuarioLogadoPodeEfetuarAssociacao(PayloadTokenJwt payloadToken, AssociarUsuarioPerfilCommand request)
+        private bool VerificarSeUsuarioLogadoPodeEfetuarAssociacao(AssociarUsuarioPerfilCommand request)
         {
-            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Verificando se usuário logado {payloadToken.Cpf} pode associar o usuario requisitado {request.Cpf} ao perfil indicado");
+            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Consultando perfis do usuário logado {request.CpfUsuarioLogado}");
+            var perfisUsuarioLogado = _perfilUsuarioRepository.ListarPorCpf(request.CpfUsuarioLogado);
+
+            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Montando objeto Usuario do {request.CpfUsuarioLogado}");
+            var usuarioLogado = new Domain.Usuario(request.CpfUsuarioLogado, perfisUsuarioLogado.Select(p => new Domain.Perfil(p.IdCondominio, p.Administrador)));
+
+            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Verificando se usuário logado {usuarioLogado.Cpf} pode associar o usuario requisitado {request.Cpf} ao perfil indicado");
             if (request.IdCondominio.HasValue)
-                return payloadToken.UsuarioEhAdministradorCondominio(request.IdCondominio.Value);
+                return usuarioLogado.UsuarioAdministradorCondominio(request.IdCondominio.Value);
             else
-                return payloadToken.AdministradorGeral;
+                return usuarioLogado.UsuarioAdministradorGeral;
         }
 
         private async Task<PerfilUsuario> AtualizarPerfilUsuario(IEnumerable<PerfilUsuario> perfisUsuario, AssociarUsuarioPerfilCommand request)
@@ -73,26 +71,26 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
             _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Atualizando perfil do usuário {request.Cpf}");
 
             if (!request.IdCondominio.HasValue && request.Administrador)
-                return await AtualizarPerfilUsuarioAdministradorGeral(request.Cpf, perfisUsuario);
+                return await AtualizarPerfilUsuarioAdministradorGeral(request, perfisUsuario);
 
             if (request.IdCondominio.HasValue)
                 return await AtualizarPerfilUsuarioCondominio(request, perfisUsuario);
 
-            return new PerfilUsuario(null, request.Cpf, null, false);
+            return new PerfilUsuario(null, request.Cpf, null, false, request.CpfUsuarioLogado);
         }
 
-        private async Task<PerfilUsuario> AtualizarPerfilUsuarioAdministradorGeral(string cpf, IEnumerable<PerfilUsuario> perfisUsuario)
+        private async Task<PerfilUsuario> AtualizarPerfilUsuarioAdministradorGeral(AssociarUsuarioPerfilCommand request, IEnumerable<PerfilUsuario> perfisUsuario)
         {
-            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Verificando se {cpf} já é administrador geral");
+            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Verificando se {request.Cpf} já é administrador geral");
             var perfilAdm = perfisUsuario.FirstOrDefault(u => !u.IdCondominio.HasValue && u.Administrador);
             if (perfilAdm != null)
             {
-                _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Usuario {cpf} já é administrador geral");
+                _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Usuario {request.Cpf} já é administrador geral");
                 return perfilAdm;
             }
 
-            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Criando perfil de administrador geral para o usuário {cpf}");
-            return await _perfilUsuarioRepository.Criar(new PerfilUsuario(null, cpf, null, true));
+            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Criando perfil de administrador geral para o usuário {request.Cpf}");
+            return await _perfilUsuarioRepository.Criar(new PerfilUsuario(null, request.Cpf, null, true, request.CpfUsuarioLogado));
         }
 
         private async Task<PerfilUsuario> AtualizarPerfilUsuarioCondominio(AssociarUsuarioPerfilCommand request, IEnumerable<PerfilUsuario> perfisUsuario)
@@ -112,7 +110,7 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
             }
 
             _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Criando perfil do usuário {request.Cpf} para o condominip {request.IdCondominio.Value}");
-            return await _perfilUsuarioRepository.Criar(new PerfilUsuario(null, request.Cpf, request.IdCondominio, request.Administrador));
+            return await _perfilUsuarioRepository.Criar(new PerfilUsuario(null, request.Cpf, request.IdCondominio, request.Administrador, request.CpfUsuarioLogado));
         }
     }
 }
