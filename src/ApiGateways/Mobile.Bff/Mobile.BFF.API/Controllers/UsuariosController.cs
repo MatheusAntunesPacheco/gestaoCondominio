@@ -76,5 +76,19 @@ namespace Mobile.BFF.API.Controllers
 
             return BadRequest(resultado);
         }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("perfil")]
+        public async Task<IActionResult> DesassociarUsuarioAoPerfil([FromHeader] string authorization, DesassociarUsuarioPerfilRequest model)
+        {
+            _logger.LogInformation($"[UsuarioController] Desassociando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
+            var payloadTokenJwt = await _mediator.Send(new LerPayloadTokenJwtCommand(authorization[7..]));
+            var resultado = await _gestaoAcessoService.DesassociarUsuarioAUmPerfil(new Services.Models.DesassociacaoUsuarioPerfilRequest(model.Cpf, model.IdCondominio, payloadTokenJwt.Cpf));
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
     }
 }

@@ -18,6 +18,7 @@
                 public static readonly string CriacaoUsuario = "usuarios";
                 public static readonly string AutenticacaoUsuario = "usuarios/autenticacao";
                 public static readonly string AssociacaoUsuario = "usuarios/perfil";
+                public static readonly string DesassociacaoUsuario = "usuarios/perfil";
             }
         }
     }

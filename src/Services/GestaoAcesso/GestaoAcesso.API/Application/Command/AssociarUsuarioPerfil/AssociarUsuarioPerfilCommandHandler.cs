@@ -1,4 +1,5 @@
-﻿using GestaoAcesso.API.Entities;
+﻿using GestaoAcesso.API.Application.Command.ObterDadosUsuario;
+using GestaoAcesso.API.Entities;
 using GestaoAcesso.API.Infrastructure.Interfaces;
 using MediatR;
 
@@ -23,17 +24,18 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
             _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Iniciando associação do usuário {request.Cpf} ao condominio {request.IdCondominio}");
 
             _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Consultando usuário {request.Cpf}");
+            
+            if (! (await VerificarSeUsuarioLogadoPodeEfetuarAssociacao(request)))
+            {
+                _logger.LogWarning($"[AssociarUsuarioPerfilCommandHandler] Usuario {request.Cpf} não tem permissão para cadastrar o usuário a esse perfil");
+                return new ProcessamentoBaseResponse(false, "Usuario não tem permissão para cadastrar o usuário a esse perfil");
+            }
+
             var usuario = await _usuarioRepository.ObterPorCpf(request.Cpf);
             if (usuario == null)
             {
                 _logger.LogWarning($"[AssociarUsuarioPerfilCommandHandler] Usuário {request.Cpf} não está cadastrado no banco de dados");
                 return new ProcessamentoBaseResponse(false, "Usuário não cadastrado no banco de dados");
-            }
-
-            if (!VerificarSeUsuarioLogadoPodeEfetuarAssociacao(request))
-            {
-                _logger.LogWarning($"[AssociarUsuarioPerfilCommandHandler] Usuario {request.Cpf} não tem permissão para cadastrar o usuário a esse perfil");
-                return new ProcessamentoBaseResponse(false, "Usuario não tem permissão para cadastrar o usuário a esse perfil");
             }
 
             var perfisUsuario = _perfilUsuarioRepository.ListarPorCpf(request.Cpf);
@@ -51,13 +53,10 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
         /// <param name="usuarioLogado">Usuário logado</param>
         /// <param name="request">Requisição para associação do usuario com um perfil</param>
         /// <returns></returns>
-        private bool VerificarSeUsuarioLogadoPodeEfetuarAssociacao(AssociarUsuarioPerfilCommand request)
+        private async Task<bool> VerificarSeUsuarioLogadoPodeEfetuarAssociacao(AssociarUsuarioPerfilCommand request)
         {
             _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Consultando perfis do usuário logado {request.CpfUsuarioLogado}");
-            var perfisUsuarioLogado = _perfilUsuarioRepository.ListarPorCpf(request.CpfUsuarioLogado);
-
-            _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Montando objeto Usuario do {request.CpfUsuarioLogado}");
-            var usuarioLogado = new Domain.Usuario(request.CpfUsuarioLogado, perfisUsuarioLogado.Select(p => new Domain.Perfil(p.IdCondominio, p.Administrador)));
+            var usuarioLogado = await _mediator.Send(new ObterDadosUsuarioCommand(request.CpfUsuarioLogado));
 
             _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Verificando se usuário logado {usuarioLogado.Cpf} pode associar o usuario requisitado {request.Cpf} ao perfil indicado");
             if (request.IdCondominio.HasValue)

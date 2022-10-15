@@ -7,5 +7,6 @@ namespace GestaoAcesso.API.Infrastructure.Interfaces
         Task<PerfilUsuario> Criar(PerfilUsuario usuario);
         IEnumerable<PerfilUsuario> ListarPorCpf(string cpf);
         PerfilUsuario Atualizar(PerfilUsuario perfilUsuario);
+        void Remover(PerfilUsuario perfilUsuario);
     }
 }

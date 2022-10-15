@@ -1,6 +1,7 @@
 using GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil;
 using GestaoAcesso.API.Application.Command.AutenticarUsuario;
 using GestaoAcesso.API.Application.Command.CadastrarUsuario;
+using GestaoAcesso.API.Application.Command.DesassociarUsuarioPerfil;
 using GestaoAcesso.API.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -75,6 +76,23 @@ namespace GestaoAcesso.Controllers
                 model.Cpf, 
                 model.IdCondominio, 
                 model.Administrador,
+                model.CpfUsuarioLogado)
+            );
+
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
+        [HttpDelete]
+        [Route("perfil")]
+        public async Task<IActionResult> DesassociarUsuarioAoPerfil(DesassociarUsuarioPerfilModel model)
+        {
+            _logger.LogInformation($"[UsuarioController] Desassociando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
+            var resultado = await _mediator.Send(new DesassociarUsuarioPerfilCommand(
+                model.Cpf,
+                model.IdCondominio,
                 model.CpfUsuarioLogado)
             );
 

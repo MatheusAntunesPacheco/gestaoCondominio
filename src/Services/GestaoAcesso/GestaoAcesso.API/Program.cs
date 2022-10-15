@@ -4,6 +4,7 @@ using GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil;
 using GestaoAcesso.API.Application.Command.AutenticarUsuario;
 using GestaoAcesso.API.Application.Command.CadastrarUsuario;
 using GestaoAcesso.API.Application.Command.CriptografarTexto;
+using GestaoAcesso.API.Application.Command.ObterDadosUsuario;
 using GestaoAcesso.API.Infrastructure;
 using GestaoAcesso.API.Infrastructure.Interfaces;
 using GestaoAcesso.API.Infrastructure.Repositories;
@@ -27,6 +28,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddMediatR(typeof(CadastrarUsuarioCommand));
 builder.Services.AddMediatR(typeof(CriptografarTextoCommand));
+builder.Services.AddMediatR(typeof(ObterDadosUsuarioCommand));
 builder.Services.AddMediatR(typeof(AutenticarUsuarioCommand));
 builder.Services.AddMediatR(typeof(AssociarUsuarioPerfilCommand));
 

@@ -56,5 +56,24 @@ namespace Mobile.BFF.API.Services
                 PropertyNameCaseInsensitive = true
             });
         }
+
+        public async Task<ProcessamentoBaseResponse> DesassociarUsuarioAUmPerfil(DesassociacaoUsuarioPerfilRequest requisicao)
+        {
+            _logger.LogInformation($"[GestaoAcessoClient] Iniciar requisição HTTP para desassociação de usuário");
+            var uri = Configuracao.Url.ApiGestaoAcesso.UrlBasePath + Configuracao.Url.ApiGestaoAcesso.DesassociacaoUsuario;
+            var conteudo = new StringContent(JsonSerializer.Serialize(requisicao), Encoding.UTF8, "application/json");
+            HttpRequestMessage mensagemHttp = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Delete,
+                Content = conteudo,
+                RequestUri = new Uri(uri),
+            };
+            var resposta = await _httpClient.SendAsync(mensagemHttp);
+
+            return JsonSerializer.Deserialize<ProcessamentoBaseResponse>(await resposta.Content.ReadAsStringAsync(), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
     }
 }

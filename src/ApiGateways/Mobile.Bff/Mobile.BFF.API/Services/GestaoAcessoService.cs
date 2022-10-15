@@ -32,5 +32,11 @@ namespace Mobile.BFF.API.Services
             _logger.LogInformation($"[GestaoAcessoService] Iniciar verificação de associação de usuário");
             return await _gestaoAcessoClient.AssociarUsuarioAUmPerfil(requisicao);
         }
+
+        public async Task<ProcessamentoBaseResponse> DesassociarUsuarioAUmPerfil(DesassociacaoUsuarioPerfilRequest requisicao)
+        {
+            _logger.LogInformation($"[GestaoAcessoService] Iniciar verificação de desassociação de usuário");
+            return await _gestaoAcessoClient.DesassociarUsuarioAUmPerfil(requisicao);
+        }
     }
 }
