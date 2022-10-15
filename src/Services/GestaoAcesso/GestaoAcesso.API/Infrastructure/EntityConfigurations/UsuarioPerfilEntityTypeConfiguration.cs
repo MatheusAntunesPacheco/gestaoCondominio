@@ -14,6 +14,7 @@ namespace GestaoAcesso.API.Infrastructure.EntityConfigurations
             usuarioConfiguration.Property(u => u.IdCondominio);
             usuarioConfiguration.Property(u => u.Administrador);
             usuarioConfiguration.Property(u => u.CpfUsuarioAlteracao);
+            usuarioConfiguration.Property(u => u.DataUltimaAlteracao);
         }
     }
 }

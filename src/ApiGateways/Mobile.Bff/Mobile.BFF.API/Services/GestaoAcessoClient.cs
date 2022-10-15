@@ -1,5 +1,7 @@
-﻿using Mobile.BFF.API.Config;
+﻿using Mobile.BFF.API.Application.Command;
+using Mobile.BFF.API.Config;
 using Mobile.BFF.API.Models;
+using Mobile.BFF.API.Services.Models;
 using System.Text;
 using System.Text.Json;
 
@@ -24,6 +26,19 @@ namespace Mobile.BFF.API.Services
             var resposta = await _httpClient.PostAsync(uri, conteudo);
 
             return JsonSerializer.Deserialize<AutenticacaoUsuarioResponse>(await resposta.Content.ReadAsStringAsync(), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+
+        public async Task<ProcessamentoBaseResponse> AssociarUsuarioAUmPerfil(AssociacaoUsuarioPerfilRequest requisicao)
+        {
+            _logger.LogInformation($"[GestaoAcessoClient] Iniciar requisição HTTP para associação de usuário");
+            var uri = Configuracao.Url.ApiGestaoAcesso.UrlBasePath + Configuracao.Url.ApiGestaoAcesso.AssociacaoUsuario;
+            var conteudo = new StringContent(JsonSerializer.Serialize(requisicao), Encoding.UTF8, "application/json");
+            var resposta = await _httpClient.PostAsync(uri, conteudo);
+
+            return JsonSerializer.Deserialize<ProcessamentoBaseResponse>(await resposta.Content.ReadAsStringAsync(), new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });

@@ -76,7 +76,7 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
             if (request.IdCondominio.HasValue)
                 return await AtualizarPerfilUsuarioCondominio(request, perfisUsuario);
 
-            return new PerfilUsuario(null, request.Cpf, null, false, request.CpfUsuarioLogado);
+            return new PerfilUsuario(null, request.Cpf, null, false, request.CpfUsuarioLogado, DateTime.UtcNow);
         }
 
         private async Task<PerfilUsuario> AtualizarPerfilUsuarioAdministradorGeral(AssociarUsuarioPerfilCommand request, IEnumerable<PerfilUsuario> perfisUsuario)
@@ -90,7 +90,7 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
             }
 
             _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Criando perfil de administrador geral para o usuário {request.Cpf}");
-            return await _perfilUsuarioRepository.Criar(new PerfilUsuario(null, request.Cpf, null, true, request.CpfUsuarioLogado));
+            return await _perfilUsuarioRepository.Criar(new PerfilUsuario(null, request.Cpf, null, true, request.CpfUsuarioLogado, DateTime.UtcNow));
         }
 
         private async Task<PerfilUsuario> AtualizarPerfilUsuarioCondominio(AssociarUsuarioPerfilCommand request, IEnumerable<PerfilUsuario> perfisUsuario)
@@ -100,7 +100,7 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
             if (perfilCondominio != null && perfilCondominio.Administrador != request.Administrador)
             {
                 _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Usuario {perfilCondominio.Cpf} já possui perfil associado ao condominio {perfilCondominio.IdCondominio.Value}. Realizando atualização");
-                perfilCondominio.AtualizarIndicadorAdministrador(request.Administrador);
+                perfilCondominio.AtualizarIndicadorAdministrador(request.Administrador, request.CpfUsuarioLogado);
                 return _perfilUsuarioRepository.Atualizar(perfilCondominio);
             }
             else if(perfilCondominio != null)
@@ -110,7 +110,7 @@ namespace GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil
             }
 
             _logger.LogInformation($"[AssociarUsuarioPerfilCommandHandler] Criando perfil do usuário {request.Cpf} para o condominip {request.IdCondominio.Value}");
-            return await _perfilUsuarioRepository.Criar(new PerfilUsuario(null, request.Cpf, request.IdCondominio, request.Administrador, request.CpfUsuarioLogado));
+            return await _perfilUsuarioRepository.Criar(new PerfilUsuario(null, request.Cpf, request.IdCondominio, request.Administrador, request.CpfUsuarioLogado, DateTime.UtcNow));
         }
     }
 }

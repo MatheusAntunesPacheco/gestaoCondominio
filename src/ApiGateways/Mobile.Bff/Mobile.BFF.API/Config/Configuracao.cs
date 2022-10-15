@@ -16,6 +16,7 @@
             {
                 public static readonly string UrlBasePath = Environment.GetEnvironmentVariable("URL_API_GESTAO_ACESSO");
                 public static readonly string AutenticarUsuario = "usuarios/autenticacao";
+                public static readonly string AssociacaoUsuario = "usuarios/perfil";
             }
         }
     }
