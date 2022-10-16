@@ -1,4 +1,4 @@
-﻿namespace Mobile.BFF.API.Services.Models
+﻿namespace Mobile.BFF.API.Services.GestaoAcessos.Models
 {
     public class DesassociacaoUsuarioPerfilRequest
     {

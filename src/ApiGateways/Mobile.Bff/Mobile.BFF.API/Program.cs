@@ -8,7 +8,8 @@ using Mobile.BFF.API.Application.Command.AutenticarUsuario;
 using Mobile.BFF.API.Application.Command.GerarTokenJwt;
 using Mobile.BFF.API.Application.Command.LerTokenJwt;
 using Mobile.BFF.API.Filters;
-using Mobile.BFF.API.Services;
+using Mobile.BFF.API.Services.Agendamento;
+using Mobile.BFF.API.Services.GestaoAcessos;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +29,7 @@ builder.Services.AddMediatR(typeof(LerPayloadTokenJwtCommand));
 #region Configurar Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "apiagenda", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mobile BFF", Version = "v1", Description = "API responsável por realizar a interface entre o aplicativo Mobile e o backend" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
@@ -92,9 +93,10 @@ builder.Services.AddAuthorization(auth =>
 
 #endregion
 
-#region Adicionar Repositorios
+#region Adicionar Clients
 
-builder.Services.AddScoped<IGestaoAcessoService, GestaoAcessoService>();
+builder.Services.AddScoped<IGestaoAcessoClient, GestaoAcessoClient>();
+builder.Services.AddScoped<IAgendamentoClient, AgendamentoClient>();
 
 #endregion
 

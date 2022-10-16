@@ -1,11 +1,10 @@
 ﻿using Mobile.BFF.API.Application;
-using Mobile.BFF.API.Application.Command;
 using Mobile.BFF.API.Models;
-using Mobile.BFF.API.Services.Models;
+using Mobile.BFF.API.Services.GestaoAcessos.Models;
 using System.Text;
 using System.Text.Json;
 
-namespace Mobile.BFF.API.Services
+namespace Mobile.BFF.API.Services.GestaoAcessos
 {
     public class GestaoAcessoClient : IGestaoAcessoClient
     {

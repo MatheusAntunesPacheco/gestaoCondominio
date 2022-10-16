@@ -1,14 +1,13 @@
-﻿using Mobile.BFF.API.Application.Command;
-using Mobile.BFF.API.Models;
-using Mobile.BFF.API.Services.Models;
+﻿using Mobile.BFF.API.Models;
+using Mobile.BFF.API.Services.GestaoAcessos.Models;
 
-namespace Mobile.BFF.API.Services
+namespace Mobile.BFF.API.Services.GestaoAcessos
 {
-    public interface IGestaoAcessoService
+    public interface IGestaoAcessoClient
     {
         Task<ProcessamentoBaseResponse> CriarUsuario(CriacaoUsuariolRequest requisicao);
         Task<AutenticacaoUsuarioResponse> AutenticarUsuario(AutenticacaoUsuarioRequest requisicao);
-        Task<ProcessamentoBaseResponse> AssociarUsuarioAUmPerfil(AssociacaoUsuarioPerfilRequest model);
+        Task<ProcessamentoBaseResponse> AssociarUsuarioAUmPerfil(AssociacaoUsuarioPerfilRequest requisicao);
         Task<ProcessamentoBaseResponse> DesassociarUsuarioAUmPerfil(DesassociacaoUsuarioPerfilRequest model);
     }
 }

@@ -44,16 +44,7 @@ AssemblyScanner.FindValidatorsInAssembly(typeof(AutenticarUsuarioCommand).Assemb
 
 builder.Services.AddDbContext<GestaoAcessoContext>(options =>
 {
-    string nomeBancoDeDados = Environment.GetEnvironmentVariable("DB_CHECKLIST_SQL_DATABASE");
-    string usuarioBanco = Environment.GetEnvironmentVariable("DB_CHECKLIST_SQL_USER");
-    string senhaBanco = Environment.GetEnvironmentVariable("DB_CHECKLIST_SQL_PASSWORD");
-
-    string connectionString = Environment.GetEnvironmentVariable("SQL_SERVER_CONNECTION_STRING")
-                                   .Replace("{DB}", nomeBancoDeDados)
-                                   .Replace("{USR}", usuarioBanco)
-                                   .Replace("{PWD}", senhaBanco);
-
-    options.UseSqlServer(connectionString,
+    options.UseSqlServer(Configuracao.BancoDeDados.StringConexao,
         sqlServerOptionsAction: sqlOptions =>
         {
             sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
@@ -72,33 +63,7 @@ builder.Services.AddScoped<IPerfisUsuariosRepository, PerfisUsuariosRepository>(
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "apiagenda", Version = "v1" });
-
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = @"JWT Authorization header using the Bearer scheme.
-                   \r\n\r\n Enter 'Bearer'[space] and then your token in the text input below.
-                    \r\n\r\nExample: 'Bearer 12345abcdef'",
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                          new OpenApiSecurityScheme
-                          {
-                              Reference = new OpenApiReference
-                              {
-                                  Type = ReferenceType.SecurityScheme,
-                                  Id = "Bearer"
-                              }
-                          },
-                         new string[] {}
-                    }
-                });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gestão de Acessos", Version = "v1", Description = "API responsável por controlar os acessos de usuários à aplicação" });
 });
 
 #region Configurar Autenticação JWT

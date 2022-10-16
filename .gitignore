@@ -351,3 +351,4 @@ MigrationBackup/
 
 /src/Services/GestaoAcesso/GestaoAcesso.API/Properties/launchSettings.json
 /src/ApiGateways/Mobile.Bff/Mobile.BFF.API/Properties/launchSettings.json
+/src/Services/Agendamento/Agendamento.API/Properties/launchSettings.json
