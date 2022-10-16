@@ -1,4 +1,4 @@
-﻿namespace Mobile.BFF.API.Application.Command
+﻿namespace Mobile.BFF.API.Services
 {
     /// <summary>
     /// Requisição utilizada para criptografar texto utilizado na api para senha de usuario

@@ -1,8 +1,7 @@
-﻿using Mobile.BFF.API.Application.Command;
-using Mobile.BFF.API.Models;
-using Mobile.BFF.API.Services.Models;
+﻿using Mobile.BFF.API.Models;
+using Mobile.BFF.API.Services.GestaoAcessos.Models;
 
-namespace Mobile.BFF.API.Services
+namespace Mobile.BFF.API.Services.GestaoAcessos
 {
     public interface IGestaoAcessoClient
     {

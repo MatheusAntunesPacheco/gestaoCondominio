@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mobile.BFF.API.Application.Command.AutenticarUsuario;
 using Mobile.BFF.API.Application.Command.LerTokenJwt;
 using Mobile.BFF.API.Models;
-using Mobile.BFF.API.Services;
+using Mobile.BFF.API.Services.GestaoAcessos;
 
 namespace Mobile.BFF.API.Controllers
 {
@@ -70,7 +70,7 @@ namespace Mobile.BFF.API.Controllers
             _logger.LogInformation($"[UsuariosController] Iniciando associação do usuário {model.Cpf}");
 
             var payloadTokenJwt = await _mediator.Send(new LerPayloadTokenJwtCommand(authorization[7..]));
-            var resultado = await _gestaoAcessoClient.AssociarUsuarioAUmPerfil(new Services.Models.AssociacaoUsuarioPerfilRequest(model.Cpf, model.IdCondominio, model.Administrador, payloadTokenJwt.Cpf));
+            var resultado = await _gestaoAcessoClient.AssociarUsuarioAUmPerfil(new Services.GestaoAcessos.Models.AssociacaoUsuarioPerfilRequest(model.Cpf, model.IdCondominio, model.Administrador, payloadTokenJwt.Cpf));
             if (resultado.Sucesso)
                 return Ok(resultado);
 
@@ -84,7 +84,7 @@ namespace Mobile.BFF.API.Controllers
         {
             _logger.LogInformation($"[UsuarioController] Desassociando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
             var payloadTokenJwt = await _mediator.Send(new LerPayloadTokenJwtCommand(authorization[7..]));
-            var resultado = await _gestaoAcessoClient.DesassociarUsuarioAUmPerfil(new Services.Models.DesassociacaoUsuarioPerfilRequest(model.Cpf, model.IdCondominio, payloadTokenJwt.Cpf));
+            var resultado = await _gestaoAcessoClient.DesassociarUsuarioAUmPerfil(new Services.GestaoAcessos.Models.DesassociacaoUsuarioPerfilRequest(model.Cpf, model.IdCondominio, payloadTokenJwt.Cpf));
             if (resultado.Sucesso)
                 return Ok(resultado);
 

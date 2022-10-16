@@ -8,7 +8,8 @@ using Mobile.BFF.API.Application.Command.AutenticarUsuario;
 using Mobile.BFF.API.Application.Command.GerarTokenJwt;
 using Mobile.BFF.API.Application.Command.LerTokenJwt;
 using Mobile.BFF.API.Filters;
-using Mobile.BFF.API.Services;
+using Mobile.BFF.API.Services.Agendamento;
+using Mobile.BFF.API.Services.GestaoAcessos;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -95,6 +96,7 @@ builder.Services.AddAuthorization(auth =>
 #region Adicionar Clients
 
 builder.Services.AddScoped<IGestaoAcessoClient, GestaoAcessoClient>();
+builder.Services.AddScoped<IAgendamentoClient, AgendamentoClient>();
 
 #endregion
 

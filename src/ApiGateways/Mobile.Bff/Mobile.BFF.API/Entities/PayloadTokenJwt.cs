@@ -47,5 +47,7 @@
         public bool UsuarioEhAdministradorCondominio(int idCondominio) => AdministradorGeral || CondominiosAdministrador.Contains(idCondominio);
 
         public bool UsuarioPertenceACondominio(int idCondominio) => AdministradorGeral || CondominiosAdministrador.Contains(idCondominio) || CondominiosUsuarioComum.Contains(idCondominio);
+
+        public bool UsuarioApenasUsuarioComum(int idCondominio) => CondominiosUsuarioComum.Contains(idCondominio);
     }
 }

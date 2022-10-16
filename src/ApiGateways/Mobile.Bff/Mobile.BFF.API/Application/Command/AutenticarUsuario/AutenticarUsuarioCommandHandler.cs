@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Mobile.BFF.API.Application.Command.GerarTokenJwt;
 using Mobile.BFF.API.Models;
-using Mobile.BFF.API.Services;
+using Mobile.BFF.API.Services.GestaoAcessos;
 
 namespace Mobile.BFF.API.Application.Command.AutenticarUsuario
 {
