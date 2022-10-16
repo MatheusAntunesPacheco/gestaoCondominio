@@ -1,4 +1,4 @@
-﻿namespace GestaoAcesso.API.Application
+﻿namespace Agendamento.API.Application
 {
     public static class Configuracao
     {

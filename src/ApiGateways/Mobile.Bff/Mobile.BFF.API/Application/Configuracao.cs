@@ -20,6 +20,11 @@
                 public static readonly string AssociacaoUsuario = "usuarios/perfil";
                 public static readonly string DesassociacaoUsuario = "usuarios/perfil";
             }
+
+            public static class ApiAgendamento
+            {
+                public static readonly string UrlBasePath = Environment.GetEnvironmentVariable("URL_API_AGENDAMENTO");
+            }
         }
     }
 }

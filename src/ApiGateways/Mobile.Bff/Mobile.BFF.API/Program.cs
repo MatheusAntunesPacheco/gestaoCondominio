@@ -28,7 +28,7 @@ builder.Services.AddMediatR(typeof(LerPayloadTokenJwtCommand));
 #region Configurar Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "apiagenda", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mobile BFF", Version = "v1", Description = "API responsável por realizar a interface entre o aplicativo Mobile e o backend" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
@@ -92,9 +92,9 @@ builder.Services.AddAuthorization(auth =>
 
 #endregion
 
-#region Adicionar Repositorios
+#region Adicionar Clients
 
-builder.Services.AddScoped<IGestaoAcessoService, GestaoAcessoService>();
+builder.Services.AddScoped<IGestaoAcessoClient, GestaoAcessoClient>();
 
 #endregion
 
