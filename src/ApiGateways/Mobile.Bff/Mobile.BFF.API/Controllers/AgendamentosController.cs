@@ -50,11 +50,20 @@ namespace Mobile.BFF.API.Controllers
             return Ok(resultado);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> ListarAgendamentos(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
+        public async Task<IActionResult> ListarAgendamentos([FromHeader] string authorization, int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
         {
+            _logger.LogInformation($"[AgendamentoController] Obtendo agendamentos do condominio {idCondominio}, area {idAreaCondominio}");
+
+            var payloadTokenJwt = await _mediator.Send(new LerPayloadTokenJwtCommand(authorization[7..]));
+            if (!payloadTokenJwt.UsuarioPertenceACondominio(idCondominio))
+            {
+                _logger.LogWarning($"[AgendamentoController] Usuario {payloadTokenJwt.Cpf} não tem autorização para listar agendamentos do condominio {idCondominio}");
+                return Forbid();
+            }
+
             var resultado = await _agendamentoClient.ListarAgendamentos(idCondominio, idAreaCondominio, dataInicio, dataFim, pagina, tamanhoPagina);
             return Ok(resultado);
         }
