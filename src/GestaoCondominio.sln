@@ -6,10 +6,15 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestaoAcesso.API", "Services\GestaoAcesso\GestaoAcesso.API\GestaoAcesso.API.csproj", "{7EA1931B-165B-4063-8807-3D5387045A54}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{874C0705-90F8-4852-AB74-A239F333008C}"
+	ProjectSection(SolutionItems) = preProject
+		BancoDeDados\Agendamento\agendamento.sql = BancoDeDados\Agendamento\agendamento.sql
+		BancoDeDados\GestaoAcesso\perfis_usuarios.sql = BancoDeDados\GestaoAcesso\perfis_usuarios.sql
+		BancoDeDados\GestaoAcesso\usuario.sql = BancoDeDados\GestaoAcesso\usuario.sql
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BFF.API", "ApiGateways\Mobile.Bff\Mobile.BFF.API\Mobile.BFF.API.csproj", "{304AB36D-382A-4C3A-98C5-CEA284233FD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agendamento.API", "Services\Agendamento\Agendamento.API\Agendamento.API.csproj", "{97DCC020-C3FD-48B4-A603-B3AD37EBB6EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agendamento.API", "Services\Agendamento\Agendamento.API\Agendamento.API.csproj", "{97DCC020-C3FD-48B4-A603-B3AD37EBB6EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

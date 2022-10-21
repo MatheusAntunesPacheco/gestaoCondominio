@@ -27,5 +27,20 @@ namespace Agendamento.API.Infrastructure.Repositories
                                          && a.DataEvento.Date == data.Date
                                          );
         }
+
+        public (int quantidadeTotal, IEnumerable<Entities.Agendamento> listaAgendamentos) Listar(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
+        {
+            int quantidadeRegistrosAPular = tamanhoPagina * (pagina - 1);
+            var agendamentos = _context.Agendamentos.Where(
+                        a => a.IdCondominio == idCondominio
+                          && a.IdAreaCondominio == idAreaCondominio
+                          && a.DataEvento >= dataInicio
+                          && a.DataEvento <= dataFim);
+
+            var paginaDeDados = agendamentos
+                        .Skip(quantidadeRegistrosAPular).Take(tamanhoPagina);
+
+            return (agendamentos.Count(), paginaDeDados.Select(e => e));
+        }
     }
 }

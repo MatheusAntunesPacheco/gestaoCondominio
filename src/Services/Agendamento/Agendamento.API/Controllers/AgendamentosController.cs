@@ -1,4 +1,5 @@
 using Agendamento.API.Application.Command.AgendarEvento;
+using Agendamento.API.Infrastructure.Interfaces;
 using Agendamento.API.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,14 @@ namespace Agendamento.API.Controllers
     {
         private readonly ILogger<AgendamentosController> _logger;
         private readonly IMediator _mediator;
+        private readonly IAgendamentosRepository _agendamentosRepository;
 
-        public AgendamentosController(ILogger<AgendamentosController> logger, IMediator mediator)
+        public AgendamentosController(ILogger<AgendamentosController> logger, IMediator mediator,
+            IAgendamentosRepository agendamentosRepository)
         {
             _logger = logger;
             _mediator = mediator;
+            _agendamentosRepository = agendamentosRepository;
         }
 
         [HttpPost]
@@ -37,6 +41,15 @@ namespace Agendamento.API.Controllers
                 return Ok(resultado);
 
             return BadRequest(resultado);
+        }
+
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> ObterAgendameto(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
+        {
+            var consultaPAginadaAgendamentos = _agendamentosRepository.Listar(idCondominio, idAreaCondominio, dataInicio, dataFim, pagina, tamanhoPagina);
+
+            return Ok(new ConsultaPaginada<Entities.Agendamento>(pagina, tamanhoPagina, consultaPAginadaAgendamentos.quantidadeTotal, consultaPAginadaAgendamentos.listaAgendamentos));
         }
     }
 }

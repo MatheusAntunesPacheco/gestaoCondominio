@@ -21,7 +21,7 @@
             base(cpfUsuarioLogado, idCondominio, usuarioAdministradorCondominio, usuarioComumCondominio)
         {
             Cpf = cpf;
-            this.IdAreaCondominio = idAreaCondominio;
+            IdAreaCondominio = idAreaCondominio;
             DataEvento = dataEvento;
         }
     }
