@@ -25,6 +25,7 @@
             {
                 public static readonly string UrlBasePath = Environment.GetEnvironmentVariable("URL_API_AGENDAMENTO");
                 public static readonly string AgendarEvento = "agendamentos";
+                public static readonly string ListarEvento = "agendamentos";
             }
         }
     }

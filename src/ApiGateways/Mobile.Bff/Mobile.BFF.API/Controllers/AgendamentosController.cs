@@ -49,5 +49,14 @@ namespace Mobile.BFF.API.Controllers
 
             return Ok(resultado);
         }
+
+        //[Authorize]
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> ListarAgendamentos(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
+        {
+            var resultado = await _agendamentoClient.ListarAgendamentos(idCondominio, idAreaCondominio, dataInicio, dataFim, pagina, tamanhoPagina);
+            return Ok(resultado);
+        }
     }
 }

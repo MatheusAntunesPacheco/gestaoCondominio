@@ -1,4 +1,4 @@
-﻿namespace Agendamento.API.Models
+﻿namespace Mobile.BFF.API.Services.Agendamento.Models
 {
     public class ConsultaPaginada<T>
     {
