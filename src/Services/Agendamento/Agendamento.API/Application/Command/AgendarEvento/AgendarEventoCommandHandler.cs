@@ -1,4 +1,5 @@
 ﻿using Agendamento.API.Infrastructure.Interfaces;
+using Agendamento.Domain;
 using MediatR;
 
 namespace Agendamento.API.Application.Command.AgendarEvento
@@ -27,7 +28,7 @@ namespace Agendamento.API.Application.Command.AgendarEvento
                 return new ProcessamentoBaseResponse(false, "Já existe um agendamento para a mesma área na data escolhida");
 
             _logger.LogInformation($"[AgendarEventoCommandHandler] Realizando agendamento para o condomínio {request.IdCondominio} area {request.IdAreaCondominio}");
-            await _agendamentosRepository.Criar(new Entities.Agendamento(request.Cpf, request.IdCondominio, request.IdAreaCondominio, request.DataEvento.Date, request.CpfUsuarioLogado, DateTime.UtcNow));
+            await _agendamentosRepository.Criar(new AgendamentoDomain(request.Cpf, request.IdCondominio, request.IdAreaCondominio, request.DataEvento.Date, request.CpfUsuarioLogado));
             return new ProcessamentoBaseResponse(true, string.Empty);
         }
     }

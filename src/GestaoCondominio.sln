@@ -6,15 +6,29 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestaoAcesso.API", "Services\GestaoAcesso\GestaoAcesso.API\GestaoAcesso.API.csproj", "{7EA1931B-165B-4063-8807-3D5387045A54}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{874C0705-90F8-4852-AB74-A239F333008C}"
-	ProjectSection(SolutionItems) = preProject
-		BancoDeDados\Agendamento\agendamento.sql = BancoDeDados\Agendamento\agendamento.sql
-		BancoDeDados\GestaoAcesso\perfis_usuarios.sql = BancoDeDados\GestaoAcesso\perfis_usuarios.sql
-		BancoDeDados\GestaoAcesso\usuario.sql = BancoDeDados\GestaoAcesso\usuario.sql
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BFF.API", "ApiGateways\Mobile.Bff\Mobile.BFF.API\Mobile.BFF.API.csproj", "{304AB36D-382A-4C3A-98C5-CEA284233FD5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agendamento.API", "Services\Agendamento\Agendamento.API\Agendamento.API.csproj", "{97DCC020-C3FD-48B4-A603-B3AD37EBB6EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Agendamento", "Agendamento", "{947D8309-A08F-4FE3-A103-27C160EA5C87}"
+	ProjectSection(SolutionItems) = preProject
+		BancoDeDados\Agendamento\agendamento.sql = BancoDeDados\Agendamento\agendamento.sql
+		BancoDeDados\Agendamento\auditoria_agendamento.sql = BancoDeDados\Agendamento\auditoria_agendamento.sql
+		BancoDeDados\Agendamento\status_agendamento.sql = BancoDeDados\Agendamento\status_agendamento.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gestao de Acesso", "Gestao de Acesso", "{C06DB576-5C3A-48F4-A337-51816679A40D}"
+	ProjectSection(SolutionItems) = preProject
+		BancoDeDados\GestaoAcesso\perfis_usuarios.sql = BancoDeDados\GestaoAcesso\perfis_usuarios.sql
+		BancoDeDados\GestaoAcesso\usuario.sql = BancoDeDados\GestaoAcesso\usuario.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Banco de dados", "Banco de dados", "{20726F4E-BBD4-4C9A-A7A7-2A6D7E9CC745}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agendamento.Infrastructure", "Agendamento.Infrastructure\Agendamento.Infrastructure.csproj", "{AA8353FA-28C3-458C-B8F2-A322FE985CE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agendamento.Domain", "Agendamento.Domain\Agendamento.Domain.csproj", "{6F0E0692-ADAF-4B27-B0B6-BF3D16B77D04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,9 +48,22 @@ Global
 		{97DCC020-C3FD-48B4-A603-B3AD37EBB6EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97DCC020-C3FD-48B4-A603-B3AD37EBB6EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97DCC020-C3FD-48B4-A603-B3AD37EBB6EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA8353FA-28C3-458C-B8F2-A322FE985CE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA8353FA-28C3-458C-B8F2-A322FE985CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA8353FA-28C3-458C-B8F2-A322FE985CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA8353FA-28C3-458C-B8F2-A322FE985CE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F0E0692-ADAF-4B27-B0B6-BF3D16B77D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F0E0692-ADAF-4B27-B0B6-BF3D16B77D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F0E0692-ADAF-4B27-B0B6-BF3D16B77D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F0E0692-ADAF-4B27-B0B6-BF3D16B77D04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{947D8309-A08F-4FE3-A103-27C160EA5C87} = {20726F4E-BBD4-4C9A-A7A7-2A6D7E9CC745}
+		{C06DB576-5C3A-48F4-A337-51816679A40D} = {20726F4E-BBD4-4C9A-A7A7-2A6D7E9CC745}
+		{20726F4E-BBD4-4C9A-A7A7-2A6D7E9CC745} = {874C0705-90F8-4852-AB74-A239F333008C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CB771B43-4063-4727-B7CF-B948536F7FF0}

@@ -1,6 +1,9 @@
 using Agendamento.API.Application.Command.AgendarEvento;
+using Agendamento.API.Application.Command.AlterarEvento;
+using Agendamento.API.Application.Command.CancelarEvento;
 using Agendamento.API.Infrastructure.Interfaces;
 using Agendamento.API.Models;
+using Agendamento.Infrastructure.Model;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +29,7 @@ namespace Agendamento.API.Controllers
         [Route("")]
         public async Task<IActionResult> SalvarAgendamento(AgendamentoAreaCondominioModel model)
         {
-            _logger.LogInformation($"Iniciando agendamento para a area {model.IdAreaCondominio} do condominio {model.IdCondominio} para o usuário {model.Cpf}");
+            _logger.LogInformation($"[AgendamentosController] Iniciando agendamento para a area {model.IdAreaCondominio} do condominio {model.IdCondominio} para o usuário {model.Cpf}");
             var resultado = await _mediator.Send(new AgendarEventoCommand(
                             model.Cpf, 
                             model.IdCondominio, 
@@ -47,9 +50,52 @@ namespace Agendamento.API.Controllers
         [Route("")]
         public async Task<IActionResult> ObterAgendameto(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
         {
-            var consultaPAginadaAgendamentos = _agendamentosRepository.Listar(idCondominio, idAreaCondominio, dataInicio, dataFim, pagina, tamanhoPagina);
+            _logger.LogInformation($"[AgendamentosController] Iniciando consulta por agendamentos do condominio {idCondominio}, area {idAreaCondominio}");
+            var consultaPaginadaAgendamentos = _agendamentosRepository.Listar(idCondominio, idAreaCondominio, dataInicio, dataFim, pagina, tamanhoPagina);
 
-            return Ok(new ConsultaPaginada<Entities.Agendamento>(pagina, tamanhoPagina, consultaPAginadaAgendamentos.quantidadeTotal, consultaPAginadaAgendamentos.listaAgendamentos));
+            return Ok(new ConsultaPaginada<AgendamentoModel>(pagina, tamanhoPagina, consultaPaginadaAgendamentos.quantidadeTotal, consultaPaginadaAgendamentos.listaAgendamentos));
+        }
+
+        [HttpDelete]
+        [Route("")]
+        public async Task<IActionResult> CancelarAgendamento(AgendamentoAreaCondominioModel model)
+        {
+            _logger.LogInformation($"[AgendamentosController] Iniciando cancelamento de agendamento no condominio {model.IdCondominio}, area {model.IdAreaCondominio}, data {model.DataEvento}");
+            var resultado = await _mediator.Send(new CancelarEventoCommand(
+                            model.Cpf,
+                            model.IdCondominio,
+                            model.IdAreaCondominio,
+                            model.DataEvento.Date,
+                            model.CpfUsuarioLogado,
+                            model.UsuarioAdministradorCondominio,
+                            model.UsuarioComumCondominio)
+                        );
+
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
+        [HttpPut]
+        [Route("")]
+        public async Task<IActionResult> AlterarAgendamento(AgendamentoAreaCondominioModel model)
+        {
+            _logger.LogInformation($"[AgendamentosController] Iniciando alteração de agendamento no condominio {model.IdCondominio}, area {model.IdAreaCondominio}, data {model.DataEvento}");
+            var resultado = await _mediator.Send(new AlterarEventoCommand(
+                            model.Cpf,
+                            model.IdCondominio,
+                            model.IdAreaCondominio,
+                            model.DataEvento.Date,
+                            model.CpfUsuarioLogado,
+                            model.UsuarioAdministradorCondominio,
+                            model.UsuarioComumCondominio)
+                        );
+
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
         }
     }
 }

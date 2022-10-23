@@ -1,4 +1,7 @@
-DROP TABLE usuarios
+IF OBJECT_ID ('dbo.usuarios') IS NOT NULL
+	DROP TABLE dbo.usuarios
+GO
+
 CREATE TABLE usuarios (
 	txt_cpf CHAR(11) NOT NULL PRIMARY KEY,
 	txt_nome VARCHAR(100) NOT NULL,

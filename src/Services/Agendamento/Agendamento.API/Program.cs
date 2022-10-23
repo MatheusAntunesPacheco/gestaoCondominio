@@ -1,7 +1,10 @@
 using Agendamento.API.Application.Command.AgendarEvento;
+using Agendamento.API.Application.Command.AlterarEvento;
+using Agendamento.API.Application.Command.CancelarEvento;
 using Agendamento.API.Infrastructure;
 using Agendamento.API.Infrastructure.Interfaces;
 using Agendamento.API.Infrastructure.Repositories;
+using Agendamento.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -21,6 +24,8 @@ builder.Services.AddSwaggerGen(c =>
 #region Configurar Mediator
 
 builder.Services.AddMediatR(typeof(AgendarEventoCommand));
+builder.Services.AddMediatR(typeof(CancelarEventoCommand));
+builder.Services.AddMediatR(typeof(AlterarEventoCommand));
 
 #endregion
 
