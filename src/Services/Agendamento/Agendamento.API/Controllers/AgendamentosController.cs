@@ -66,8 +66,17 @@ namespace Agendamento.API.Controllers
         {
             _logger.LogInformation($"[AgendamentosController] Iniciando consulta por agendamentos do condominio {idCondominio}, area {idAreaCondominio}");
             var consultaPaginadaAgendamentos = _agendamentosRepository.Listar(idCondominio, idAreaCondominio, dataInicio, dataFim, pagina, tamanhoPagina);
+            var listaRetornoAgendamentos = consultaPaginadaAgendamentos.listaAgendamentos.Select(a =>
+                    new ObterAgendamentoResultado(
+                            a.IdCondominio,
+                            a.IdAreaCondominio,
+                            a.Cpf,
+                            a.DataEvento,
+                            a.StatusAgendamento.ToString()
+                        )
+                );
 
-            return Ok(new ConsultaPaginada<AgendamentoModel>(pagina, tamanhoPagina, consultaPaginadaAgendamentos.quantidadeTotal, consultaPaginadaAgendamentos.listaAgendamentos));
+            return Ok(new ConsultaPaginada<ObterAgendamentoResultado>(pagina, tamanhoPagina, consultaPaginadaAgendamentos.quantidadeTotal, listaRetornoAgendamentos));
         }
 
         /// <summary>
