@@ -16,8 +16,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Agendamento.Domain\Agendamento.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

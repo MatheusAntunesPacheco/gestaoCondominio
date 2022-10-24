@@ -25,19 +25,22 @@ namespace Agendamento.API.Controllers
             _agendamentosRepository = agendamentosRepository;
         }
 
+        /// <summary>
+        /// Rota para agendar uma area do condominio em um determinado dia
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> SalvarAgendamento(AgendamentoAreaCondominioModel model)
+        public async Task<IActionResult> SalvarAgendamento(CriarAgendamentoRequisicao model)
         {
             _logger.LogInformation($"[AgendamentosController] Iniciando agendamento para a area {model.IdAreaCondominio} do condominio {model.IdCondominio} para o usuário {model.Cpf}");
             var resultado = await _mediator.Send(new AgendarEventoCommand(
-                            model.Cpf, 
-                            model.IdCondominio, 
-                            model.IdAreaCondominio, 
-                            model.DataEvento, 
-                            model.CpfUsuarioLogado, 
-                            model.UsuarioAdministradorCondominio, 
-                            model.UsuarioComumCondominio)
+                            model.IdCondominio,
+                            model.IdAreaCondominio,
+                            model.Cpf,
+                            model.DataEvento,
+                            model.CpfUsuarioLogado)
                         );
 
             if (resultado.Sucesso)
@@ -46,6 +49,17 @@ namespace Agendamento.API.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Rota para consulta de agendamentos conforme parametros informados
+        /// Retorno se trata de uma consulta paginada
+        /// </summary>
+        /// <param name="idCondominio">ID do condominio</param>
+        /// <param name="idAreaCondominio">ID da area dentro do condominio</param>
+        /// <param name="dataInicio">Data inicio da pesquisa</param>
+        /// <param name="dataFim">Data fim da pesquisa</param>
+        /// <param name="pagina">Numero da pagina a que se deseja pesquisar</param>
+        /// <param name="tamanhoPagina">Tamanha da pagina da pesquisa</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> ObterAgendameto(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
@@ -56,19 +70,24 @@ namespace Agendamento.API.Controllers
             return Ok(new ConsultaPaginada<AgendamentoModel>(pagina, tamanhoPagina, consultaPaginadaAgendamentos.quantidadeTotal, consultaPaginadaAgendamentos.listaAgendamentos));
         }
 
-        [HttpDelete]
-        [Route("")]
-        public async Task<IActionResult> CancelarAgendamento(AgendamentoAreaCondominioModel model)
+        /// <summary>
+        /// Rota para cancelamento de um agendamento
+        /// </summary>
+        /// <param name="idCondominio">ID do condominio</param>
+        /// <param name="idAreaCondominio">ID da area do condomimio</param>
+        /// <param name="dataEvento">Dia do evento</param>
+        /// <param name="cpfUsuarioLogado">CPF usuario logado</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("cancelamento")]
+        public async Task<IActionResult> CancelarAgendamento(int idCondominio, int idAreaCondominio, DateTime dataEvento, string cpfUsuarioLogado)
         {
-            _logger.LogInformation($"[AgendamentosController] Iniciando cancelamento de agendamento no condominio {model.IdCondominio}, area {model.IdAreaCondominio}, data {model.DataEvento}");
+            _logger.LogInformation($"[AgendamentosController] Iniciando cancelamento de agendamento no condominio {idCondominio}, area {idAreaCondominio}, data {dataEvento.ToString("dd-MM-yyyy")}");
             var resultado = await _mediator.Send(new CancelarEventoCommand(
-                            model.Cpf,
-                            model.IdCondominio,
-                            model.IdAreaCondominio,
-                            model.DataEvento.Date,
-                            model.CpfUsuarioLogado,
-                            model.UsuarioAdministradorCondominio,
-                            model.UsuarioComumCondominio)
+                            idCondominio,
+                            idAreaCondominio,
+                            dataEvento,
+                            cpfUsuarioLogado)
                         );
 
             if (resultado.Sucesso)
@@ -77,19 +96,22 @@ namespace Agendamento.API.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Reagendar um evento
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
-        [Route("")]
-        public async Task<IActionResult> AlterarAgendamento(AgendamentoAreaCondominioModel model)
+        [Route("reagendamento")]
+        public async Task<IActionResult> ReagendarEvento(int idCondominio, int idAreaCondominio, DateTime dataEvento, string cpfUsuarioLogado, DateTime novaDataEvento)
         {
-            _logger.LogInformation($"[AgendamentosController] Iniciando alteração de agendamento no condominio {model.IdCondominio}, area {model.IdAreaCondominio}, data {model.DataEvento}");
+            _logger.LogInformation($"[AgendamentosController] Iniciando alteração de agendamento no condominio {idCondominio}, area {idAreaCondominio}, data {dataEvento.ToString("dd-MM-yyyy")}");
             var resultado = await _mediator.Send(new AlterarEventoCommand(
-                            model.Cpf,
-                            model.IdCondominio,
-                            model.IdAreaCondominio,
-                            model.DataEvento.Date,
-                            model.CpfUsuarioLogado,
-                            model.UsuarioAdministradorCondominio,
-                            model.UsuarioComumCondominio)
+                            idCondominio,
+                            idAreaCondominio,
+                            dataEvento.Date,
+                            novaDataEvento.Date,
+                            cpfUsuarioLogado)
                         );
 
             if (resultado.Sucesso)

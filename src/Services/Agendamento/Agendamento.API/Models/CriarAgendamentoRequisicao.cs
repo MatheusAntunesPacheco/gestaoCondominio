@@ -1,14 +1,9 @@
-﻿using MediatR;
-
-namespace Agendamento.API.Application.Command.CancelarEvento
+﻿namespace Agendamento.API.Models
 {
-    /// <summary>
-    /// Requisição utilizada para criar novo usuario no sistema
-    /// </summary>
-    public class CancelarEventoCommand : IRequest<ProcessamentoBaseResponse>
+    public class CriarAgendamentoRequisicao
     {
         /// <summary>
-        /// Id do condomínio cujo agendamento será realizado
+        /// ID do condominio associado a qualquer requisição realizada para a API
         /// </summary>
         public int IdCondominio { get; private set; }
 
@@ -18,19 +13,25 @@ namespace Agendamento.API.Application.Command.CancelarEvento
         public int IdAreaCondominio { get; private set; }
 
         /// <summary>
+        /// CPF do usuario responsável pelo agendamento
+        /// </summary>
+        public string Cpf { get; private set; }
+
+        /// <summary>
         /// Data do evento a ser agendado
         /// </summary>
-        public DateTime DataEvento { get; set; }
+        public DateTime DataEvento { get; private set; }
 
         /// <summary>
         /// Cpf do usuário logado, para saber se ele possui permissão para realizar essa associação
         /// </summary>
         public string CpfUsuarioLogado { get; private set; }
 
-        public CancelarEventoCommand(int idCondominio, int idAreaCondominio, DateTime dataEvento, string cpfUsuarioLogado)
+        public CriarAgendamentoRequisicao(int idCondominio, int idAreaCondominio, string cpf, DateTime dataEvento, string cpfUsuarioLogado)
         {
             IdCondominio = idCondominio;
             IdAreaCondominio = idAreaCondominio;
+            Cpf = cpf;
             DataEvento = dataEvento;
             CpfUsuarioLogado = cpfUsuarioLogado;
         }

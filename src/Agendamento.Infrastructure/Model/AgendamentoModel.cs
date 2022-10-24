@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Agendamento.Infrastructure.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Agendamento.Infrastructure.Model
 {
@@ -32,7 +33,7 @@ namespace Agendamento.Infrastructure.Model
         /// Data do evento a ser agendado
         /// </summary>
         [Column("dt_evento")]
-        public DateTime DataEvento { get; set; }
+        public DateTime DataEvento { get; private set; }
 
         /// <summary>
         /// Status do agendamento
@@ -40,7 +41,7 @@ namespace Agendamento.Infrastructure.Model
         /// 2 - Cancelado
         /// </summary>
         [Column("id_status")]
-        public int StatusAgendamento { get; private set; }
+        public StatusAgendamentoEnum StatusAgendamento { get; private set; }
 
         /// <summary>
         /// Data do agendamento
@@ -64,7 +65,7 @@ namespace Agendamento.Infrastructure.Model
         /// <param name="statusAgendamento"></param>
         /// <param name="dataAlteracao"></param>
         /// <param name="cpfAlteracao"></param>
-        public AgendamentoModel(string cpf, int idCondominio, int idAreaCondominio, DateTime dataEvento, int statusAgendamento, DateTime dataAlteracao, string cpfAlteracao)
+        public AgendamentoModel(string cpf, int idCondominio, int idAreaCondominio, DateTime dataEvento, StatusAgendamentoEnum statusAgendamento, DateTime dataAlteracao, string cpfAlteracao)
         {
             Cpf = cpf;
             IdCondominio = idCondominio;
@@ -75,7 +76,7 @@ namespace Agendamento.Infrastructure.Model
             CpfAlteracao = cpfAlteracao;
         }
 
-        public void AlterarStatusAgendamento(string cpfAlteracao, int idStatus)
+        public void AlterarStatusAgendamento(string cpfAlteracao, StatusAgendamentoEnum idStatus)
         {
             StatusAgendamento = idStatus;
             CpfAlteracao = cpfAlteracao;

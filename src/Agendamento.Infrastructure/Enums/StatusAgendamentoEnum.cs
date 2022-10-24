@@ -1,4 +1,4 @@
-﻿namespace Agendamento.Domain
+﻿namespace Agendamento.Infrastructure.Enums
 {
     public enum StatusAgendamentoEnum
     {

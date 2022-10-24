@@ -7,12 +7,6 @@ namespace Agendamento.API.Application.Command.AlterarEvento
     /// </summary>
     public class AlterarEventoCommand : IRequest<ProcessamentoBaseResponse>
     {
-
-        /// <summary>
-        /// CPF do usuario
-        /// </summary>
-        public string Cpf { get; private set; }
-
         /// <summary>
         /// Id do condomínio cujo agendamento será realizado
         /// </summary>
@@ -26,32 +20,25 @@ namespace Agendamento.API.Application.Command.AlterarEvento
         /// <summary>
         /// Data do evento a ser agendado
         /// </summary>
-        public DateTime DataEvento { get; set; }
+        public DateTime DataAtualEvento { get; private set; }
+
+        /// <summary>
+        /// Nova data do evento
+        /// </summary>
+        public DateTime NovaDataEvento { get; private set; }
 
         /// <summary>
         /// Cpf do usuário logado, para saber se ele possui permissão para realizar essa associação
         /// </summary>
         public string CpfUsuarioLogado { get; private set; }
 
-        /// <summary>
-        /// Atributo que indica se o usuário é administrador do condomínio
-        /// </summary>
-        public bool UsuarioAdministradorCondominio { get; private set; }
-
-        /// <summary>
-        /// Atributo que indica se o usuário é um usuário comum do condomínio
-        /// </summary>
-        public bool UsuarioComumCondominio { get; private set; }
-
-        public AlterarEventoCommand(string cpf, int idCondominio, int idAreaCondominio, DateTime dataEvento, string cpfUsuarioLogado, bool usuarioAdministradorCondominio, bool usuarioComumCondominio)
+        public AlterarEventoCommand(int idCondominio, int idAreaCondominio, DateTime dataAtualEvento, DateTime novaDataEvento, string cpfUsuarioLogado)
         {
-            Cpf = cpf;
             IdCondominio = idCondominio;
             IdAreaCondominio = idAreaCondominio;
-            DataEvento = dataEvento;
+            DataAtualEvento = dataAtualEvento;
+            NovaDataEvento = novaDataEvento;
             CpfUsuarioLogado = cpfUsuarioLogado;
-            UsuarioAdministradorCondominio = usuarioAdministradorCondominio;
-            UsuarioComumCondominio = usuarioComumCondominio;
         }
     }
 }

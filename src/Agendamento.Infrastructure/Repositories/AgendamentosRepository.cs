@@ -1,6 +1,6 @@
 ﻿using Agendamento.API.Infrastructure.Interfaces;
-using Agendamento.Domain;
 using Agendamento.Infrastructure;
+using Agendamento.Infrastructure.Enums;
 using Agendamento.Infrastructure.Model;
 using Microsoft.Extensions.Logging;
 
@@ -17,21 +17,12 @@ namespace Agendamento.API.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<AgendamentoModel> Criar(AgendamentoDomain agendamento)
+        public async Task<AgendamentoModel?> Criar(AgendamentoModel agendamento)
         {
             _logger.LogInformation($"Criando um agendamento para o condominio {agendamento.IdCondominio} na area {agendamento.IdAreaCondominio}");
-            var agendamentoModelDb = new AgendamentoModel(
-                    agendamento.Cpf,
-                    agendamento.IdCondominio,
-                    agendamento.IdAreaCondominio,
-                    agendamento.DataEvento,
-                    (int)StatusAgendamentoEnum.Agendado,
-                    DateTime.UtcNow,
-                    agendamento.CpfUsuarioLogado
-                );
             try
             {
-                var agendamentoSalvo = await _context.Agendamentos.AddAsync(agendamentoModelDb);
+                var agendamentoSalvo = await _context.Agendamentos.AddAsync(agendamento);
 
                 await _context.SaveChangesAsync();
 
@@ -45,12 +36,13 @@ namespace Agendamento.API.Infrastructure.Repositories
             
         }
 
-        public AgendamentoModel Obter(int idCondominio, int idAreaCondominio, DateTime data)
+        public AgendamentoModel? ObterEventoNaoCancelado(int idCondominio, int idAreaCondominio, DateTime data)
         {
             return _context.Agendamentos.FirstOrDefault(
                                             a => a.IdCondominio == idCondominio
                                          && a.IdAreaCondominio == idAreaCondominio
                                          && a.DataEvento.Date == data.Date
+                                         && a.StatusAgendamento != StatusAgendamentoEnum.Cancelado
                                          );
         }
 

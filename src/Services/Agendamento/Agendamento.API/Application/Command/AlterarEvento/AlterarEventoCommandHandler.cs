@@ -1,5 +1,4 @@
 ﻿using Agendamento.API.Infrastructure.Interfaces;
-using Agendamento.Domain;
 using MediatR;
 
 namespace Agendamento.API.Application.Command.AlterarEvento
@@ -17,19 +16,23 @@ namespace Agendamento.API.Application.Command.AlterarEvento
         public async Task<ProcessamentoBaseResponse> Handle(AlterarEventoCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"[AlterarEventoCommandHandler] Iniciando alteração de um evento no condomínio {request.IdCondominio} area {request.IdAreaCondominio}");
+            if (request.DataAtualEvento == request.NovaDataEvento)
+                return new ProcessamentoBaseResponse(false, "Evento não será reagendado pois a data informada é a mesma data já agendada");
 
             _logger.LogInformation($"[AlterarEventoCommandHandler] Verificando se existe o agendamento para o condomínio {request.IdCondominio} area {request.IdAreaCondominio} na mesma data");
-            var agendamento = _agendamentosRepository.Obter(request.IdCondominio, request.IdAreaCondominio, request.DataEvento);
+            var agendamento = _agendamentosRepository.ObterEventoNaoCancelado(request.IdCondominio, request.IdAreaCondominio, request.DataAtualEvento);
             if (agendamento == null)
-                return new ProcessamentoBaseResponse(false, "Não existe o agendamento para a área na data escolhida. Não foi possível alterar o evento");
+                return new ProcessamentoBaseResponse(false, "Não existe o agendamento vigente para a área na data escolhida. Não foi possível alterar o evento");
 
-            _logger.LogInformation($"[AlterarEventoCommandHandler] Verificando se usuário possui permissão para alterar evento no condominio {request.IdCondominio}");
-            if (!request.UsuarioAdministradorCondominio && agendamento.Cpf == request.CpfUsuarioLogado)
-                return new ProcessamentoBaseResponse(false, "O usuário logado não tem permissão para alterar o evento indicado");
+            _logger.LogInformation($"[AlterarEventoCommandHandler] Verificando se já não existe um agendamento para o condomínio {request.IdCondominio} area {request.IdAreaCondominio} na nova data escolhida");
+            var agendamentoNovaData = _agendamentosRepository.ObterEventoNaoCancelado(request.IdCondominio, request.IdAreaCondominio, request.NovaDataEvento);
+            if (agendamentoNovaData != null)
+                return new ProcessamentoBaseResponse(false, "Para a nova data selecionada já existe um agendamento vigente para a área na data escolhida. Não foi possível alterar o evento");
 
             _logger.LogInformation($"[AlterarEventoCommandHandler] Alterando agendamento para o condomínio {request.IdCondominio} area {request.IdAreaCondominio}");
-            agendamento.AlterarDataEvento(request.CpfUsuarioLogado, request.DataEvento);
+            agendamento.AlterarDataEvento(request.CpfUsuarioLogado, request.NovaDataEvento);
             _agendamentosRepository.AtualizarAgendamento(agendamento);
+
             return new ProcessamentoBaseResponse(true, string.Empty);
         }
     }
