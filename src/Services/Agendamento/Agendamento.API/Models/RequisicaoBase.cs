@@ -32,10 +32,11 @@ namespace Agendamento.API.Models
         /// <summary>
         /// Metodo utilizado para adicionar erro na lista de validação
         /// </summary>
+        /// <param name="campo"></param>
         /// <param name="erro"></param>
-        protected void AdicionarErro(string erro)
+        protected void AdicionarErro(string campo, string erro)
         {
-            ErrosValidacao.Add(erro);
+            ErrosValidacao.Add($"[{campo}] {erro}");
         }
 
         /// <summary>

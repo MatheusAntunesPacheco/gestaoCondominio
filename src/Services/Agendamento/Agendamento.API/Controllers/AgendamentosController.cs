@@ -3,7 +3,6 @@ using Agendamento.API.Application.Command.AlterarEvento;
 using Agendamento.API.Application.Command.CancelarEvento;
 using Agendamento.API.Infrastructure.Interfaces;
 using Agendamento.API.Models;
-using Agendamento.Infrastructure.Model;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,11 +34,15 @@ namespace Agendamento.API.Controllers
         public async Task<IActionResult> SalvarAgendamento(CriarAgendamentoRequisicao model)
         {
             _logger.LogInformation($"[AgendamentosController] Iniciando agendamento para a area {model.IdAreaCondominio} do condominio {model.IdCondominio} para o usuário {model.Cpf}");
+
+            if(!model.Valido)
+                return BadRequest(new { erros = model.Erros });
+
             var resultado = await _mediator.Send(new AgendarEventoCommand(
-                            model.IdCondominio,
-                            model.IdAreaCondominio,
+                            model.IdCondominio.Value,
+                            model.IdAreaCondominio.Value,
                             model.Cpf,
-                            model.DataEvento,
+                            model.DataEvento.Value.Date,
                             model.CpfUsuarioLogado)
                         );
 
@@ -53,12 +56,7 @@ namespace Agendamento.API.Controllers
         /// Rota para consulta de agendamentos conforme parametros informados
         /// Retorno se trata de uma consulta paginada
         /// </summary>
-        /// <param name="idCondominio">ID do condominio</param>
-        /// <param name="idAreaCondominio">ID da area dentro do condominio</param>
-        /// <param name="dataInicio">Data inicio da pesquisa</param>
-        /// <param name="dataFim">Data fim da pesquisa</param>
-        /// <param name="pagina">Numero da pagina a que se deseja pesquisar</param>
-        /// <param name="tamanhoPagina">Tamanha da pagina da pesquisa</param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("")]
@@ -69,7 +67,16 @@ namespace Agendamento.API.Controllers
             if(!model.Valido)
                 return BadRequest(new { erros = model.Erros});
 
-            var consultaPaginadaAgendamentos = _agendamentosRepository.Listar(model.IdCondominio, model.IdAreaCondominio, model.DataInicio, model.DataFim, model.ConsultarAgendamentosCancelados, model.Pagina, model.TamanhoPagina);
+            var consultaPaginadaAgendamentos = _agendamentosRepository.Listar(
+                            model.IdCondominio, 
+                            model.IdAreaCondominio, 
+                            model.DataInicio, 
+                            model.DataFim, 
+                            model.ConsultarAgendamentosCancelados, 
+                            model.Pagina, 
+                            model.TamanhoPagina
+               );
+
             var listaRetornoAgendamentos = consultaPaginadaAgendamentos.listaAgendamentos.Select(a =>
                     new ObterAgendamentoResultado(
                             a.IdCondominio,
@@ -86,21 +93,22 @@ namespace Agendamento.API.Controllers
         /// <summary>
         /// Rota para cancelamento de um agendamento
         /// </summary>
-        /// <param name="idCondominio">ID do condominio</param>
-        /// <param name="idAreaCondominio">ID da area do condomimio</param>
-        /// <param name="dataEvento">Dia do evento</param>
-        /// <param name="cpfUsuarioLogado">CPF usuario logado</param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut]
         [Route("cancelamento")]
-        public async Task<IActionResult> CancelarAgendamento(int idCondominio, int idAreaCondominio, DateTime dataEvento, string cpfUsuarioLogado)
+        public async Task<IActionResult> CancelarAgendamento([FromQuery] CancelarAgendamentoRequisicao model)
         {
-            _logger.LogInformation($"[AgendamentosController] Iniciando cancelamento de agendamento no condominio {idCondominio}, area {idAreaCondominio}, data {dataEvento.ToString("dd-MM-yyyy")}");
+            _logger.LogInformation($"[AgendamentosController] Iniciando cancelamento de agendamento no condominio");
+
+            if (!model.Valido)
+                return BadRequest(new { erros = model.Erros });
+
             var resultado = await _mediator.Send(new CancelarEventoCommand(
-                            idCondominio,
-                            idAreaCondominio,
-                            dataEvento,
-                            cpfUsuarioLogado)
+                            model.IdCondominio.Value,
+                            model.IdAreaCondominio.Value,
+                            model.DataEvento.Value,
+                            model.CpfUsuarioLogado)
                         );
 
             if (resultado.Sucesso)
@@ -116,15 +124,19 @@ namespace Agendamento.API.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("reagendamento")]
-        public async Task<IActionResult> ReagendarEvento(int idCondominio, int idAreaCondominio, DateTime dataEvento, string cpfUsuarioLogado, DateTime novaDataEvento)
+        public async Task<IActionResult> ReagendarEvento([FromQuery] AlterarAgendamentoRequisicao model)
         {
-            _logger.LogInformation($"[AgendamentosController] Iniciando alteração de agendamento no condominio {idCondominio}, area {idAreaCondominio}, data {dataEvento.ToString("dd-MM-yyyy")}");
+            _logger.LogInformation($"[AgendamentosController] Iniciando alteração de agendamento");
+
+            if (!model.Valido)
+                return BadRequest(new { erros = model.Erros });
+
             var resultado = await _mediator.Send(new AlterarEventoCommand(
-                            idCondominio,
-                            idAreaCondominio,
-                            dataEvento.Date,
-                            novaDataEvento.Date,
-                            cpfUsuarioLogado)
+                            model.IdCondominio.Value,
+                            model.IdAreaCondominio.Value,
+                            model.DataAtualEvento.Value.Date,
+                            model.NovaDataEvento.Value.Date,
+                            model.CpfUsuarioLogado)
                         );
 
             if (resultado.Sucesso)

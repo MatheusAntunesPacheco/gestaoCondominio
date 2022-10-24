@@ -1,9 +1,9 @@
 ﻿namespace Agendamento.API.Models
 {
-    public class CriarAgendamentoRequisicao : RequisicaoBase
+    public class AlterarAgendamentoRequisicao : RequisicaoBase
     {
         /// <summary>
-        /// ID do condominio associado a qualquer requisição realizada para a API
+        /// Id do condomínio cujo agendamento será realizado
         /// </summary>
         public int? IdCondominio { get; set; }
 
@@ -13,14 +13,14 @@
         public int? IdAreaCondominio { get; set; }
 
         /// <summary>
-        /// CPF do usuario responsável pelo agendamento
+        /// Data do evento
         /// </summary>
-        public string? Cpf { get; set; }
+        public DateTime? DataAtualEvento { get; set; }
 
         /// <summary>
-        /// Data do evento a ser agendado
+        /// Data do evento
         /// </summary>
-        public DateTime? DataEvento { get; set; }
+        public DateTime? NovaDataEvento { get; set; }
 
         /// <summary>
         /// Cpf do usuário logado, para saber se ele possui permissão para realizar essa associação
@@ -35,13 +35,11 @@
             if (!IdAreaCondominio.HasValue)
                 AdicionarErro(nameof(IdAreaCondominio), "Campo deve ser preenchido");
 
-            if (string.IsNullOrEmpty(Cpf))
-                AdicionarErro(nameof(Cpf), "Campo deve ser preenchido");
-            else if (Cpf.Length != 11)
-                AdicionarErro(nameof(Cpf), "CPF inválido");
+            if (!DataAtualEvento.HasValue)
+                AdicionarErro(nameof(DataAtualEvento), "Campo deve ser preenchido");
 
-            if (!DataEvento.HasValue)
-                AdicionarErro(nameof(DataEvento), "Campo deve ser preenchido");
+            if (!NovaDataEvento.HasValue)
+                AdicionarErro(nameof(NovaDataEvento), "Campo deve ser preenchido");
 
             if (string.IsNullOrEmpty(CpfUsuarioLogado))
                 AdicionarErro(nameof(CpfUsuarioLogado), "Campo deve ser preenchido");

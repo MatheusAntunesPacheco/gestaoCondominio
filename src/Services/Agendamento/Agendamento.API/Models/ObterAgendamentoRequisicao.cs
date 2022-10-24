@@ -40,16 +40,16 @@
         protected override void Validar()
         {
             if (!IdCondominio.HasValue && !DataInicio.HasValue && !DataFim.HasValue)
-                AdicionarErro("Obrigatorio preencher o ID do condominio ou alguma data da consulta");
+                AdicionarErro("Model", "Obrigatorio preencher o ID do condominio ou alguma data da consulta");
 
             if (DataInicio.HasValue && DataFim.HasValue && DataFim.Value <= DataInicio.Value)
-                AdicionarErro("Data fim deve ser maior que data inicio da consulta");
+                AdicionarErro("Datas", "Data fim deve ser maior que data inicio da consulta");
 
             if (Pagina == 0)
-                AdicionarErro("Numero da pagina deve ser maior que 0");
+                AdicionarErro(nameof(Pagina), "Deve ser maior que 0");
 
             if (TamanhoPagina == 0)
-                AdicionarErro("Tamanho da pagina deve ser maior que 0");
+                AdicionarErro(nameof(TamanhoPagina), "Deve ser maior que 0");
         }
     }
 }
