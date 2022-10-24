@@ -129,7 +129,10 @@ namespace GestaoAcesso.Controllers
         /// </summary>
         /// <param name="idCondominio"></param>
         /// <param name="cpfUsuario"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// 200 - Usuário é administrador do condominio
+        /// 204 - usuário não é administrador do condominio
+        /// </returns>
         [HttpHead]
         [Route("administrador")]
         public async Task<IActionResult> VerificarSeUsuarioEhAdministradorDoCondominio(int idCondominio, string cpfUsuario)
@@ -139,12 +142,12 @@ namespace GestaoAcesso.Controllers
             var resultado = await _mediator.Send(new ObterDadosUsuarioCommand(cpfUsuario));
 
             if (resultado == null || !resultado.ListaPerfis.Any())
-                return Unauthorized();
+                return NoContent();
 
             if (resultado.ListaPerfis.Any(p => p.PerfilAdministradorCondominio(idCondominio)))
                 return Ok();
 
-            return Unauthorized();
+            return NoContent();
         }
 
         /// <summary>
@@ -152,7 +155,10 @@ namespace GestaoAcesso.Controllers
         /// </summary>
         /// <param name="idCondominio"></param>
         /// <param name="cpfUsuario"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// 200 - Usuário pertence ao condominio
+        /// 204 - usuário não pertence ao condominio
+        /// </returns>
         [HttpHead]
         [Route("morador")]
         public async Task<IActionResult> VerificarSeUsuarioEstaVinculadoAoCondominio(int idCondominio, string cpfUsuario)
@@ -162,12 +168,12 @@ namespace GestaoAcesso.Controllers
             var resultado = await _mediator.Send(new ObterDadosUsuarioCommand(cpfUsuario));
 
             if (resultado == null || !resultado.ListaPerfis.Any())
-                return Unauthorized();
+                return NoContent();
 
             if (resultado.ListaPerfis.Any(p => p.PerfilAdministradorGeral || p.IdCondominio == idCondominio))
                 return Ok();
 
-            return Unauthorized();
+            return NoContent();
         }
     }
 }
