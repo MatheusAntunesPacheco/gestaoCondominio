@@ -1,11 +1,11 @@
 ﻿namespace GestaoAcesso.API.Models
 {
-    public class AssociarUsuarioPerfilModel
+    public class AssociarUsuarioPerfilRequisicao : RequisicaoBase
     {
         /// <summary>
         /// CPF do usuario
         /// </summary>
-        public string Cpf { get; set; }
+        public string? Cpf { get; set; }
 
         /// <summary>
         /// Id do condomínio associado ao perfil
@@ -22,6 +22,14 @@
         /// <summary>
         /// Cpf do usuário logado, para saber se ele possui permissão para realizar essa associação
         /// </summary>
-        public string CpfUsuarioLogado { get; set; }
+        public string? CpfUsuarioLogado { get; set; }
+
+        protected override void Validar()
+        {
+            if (string.IsNullOrEmpty(Cpf))
+                AdicionarErro(nameof(Cpf), "Campo deve ser preenchido");
+            else if (Cpf.Length != 11)
+                AdicionarErro(nameof(Cpf), "CPF inválido");
+        }
     }
 }

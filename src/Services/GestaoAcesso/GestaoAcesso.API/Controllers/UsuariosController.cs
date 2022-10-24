@@ -2,6 +2,7 @@ using GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil;
 using GestaoAcesso.API.Application.Command.AutenticarUsuario;
 using GestaoAcesso.API.Application.Command.CadastrarUsuario;
 using GestaoAcesso.API.Application.Command.DesassociarUsuarioPerfil;
+using GestaoAcesso.API.Application.Command.ObterDadosUsuario;
 using GestaoAcesso.API.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,15 +29,19 @@ namespace GestaoAcesso.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> CadastrarUsuario(CadastrarUsuarioModel cadastrarUsuarioModel)
+        public async Task<IActionResult> CadastrarUsuario(CadastrarUsuarioRequisicao model)
         {
-            _logger.LogInformation($"[UsuarioController] Cadastrando usuário {cadastrarUsuarioModel.Nome}");
+            _logger.LogInformation($"[UsuarioController] Cadastrando usuário {model.Nome}");
+
+            if (!model.Valido)
+                return BadRequest(new { erros = model.Erros });
+
             var resultado = await _mediator.Send(
                 new CadastrarUsuarioCommand(
-                    cadastrarUsuarioModel.Nome,
-                    cadastrarUsuarioModel.Cpf,
-                    cadastrarUsuarioModel.Senha,
-                    cadastrarUsuarioModel.Email
+                    model.Nome,
+                    model.Cpf,
+                    model.Senha,
+                    model.Email
                 )
             );
 
@@ -50,10 +55,14 @@ namespace GestaoAcesso.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("autenticacao")]
-        public async Task<IActionResult> AutenticarUsuario(AutenticarUsuarioCommand autenticarUsuarioCommand)
+        public async Task<IActionResult> AutenticarUsuario(AutenticarUsuarioRequisicao model)
         {
-            _logger.LogInformation($"[UsuarioController] Autenticando usuário {autenticarUsuarioCommand.Cpf}");
-            var resultado = await _mediator.Send(autenticarUsuarioCommand);
+            _logger.LogInformation($"[UsuarioController] Autenticando usuário");
+
+            if (!model.Valido)
+                return BadRequest(new { erros = model.Erros });
+
+            var resultado = await _mediator.Send(new AutenticarUsuarioCommand(model.Cpf, model.Senha));
 
             if (resultado.Autenticado)
                 return Ok(resultado);
@@ -69,9 +78,13 @@ namespace GestaoAcesso.Controllers
         [HttpPut]
         [HttpPost]
         [Route("perfil")]
-        public async Task<IActionResult> AssociarUsuarioAoPerfil(AssociarUsuarioPerfilModel model)
+        public async Task<IActionResult> AssociarUsuarioAoPerfil(AssociarUsuarioPerfilRequisicao model)
         {
             _logger.LogInformation($"[UsuarioController] Associando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
+
+            if (!model.Valido)
+                return BadRequest(new { erros = model.Erros });
+
             var resultado = await _mediator.Send(new AssociarUsuarioPerfilCommand(
                 model.Cpf, 
                 model.IdCondominio, 
@@ -85,11 +98,20 @@ namespace GestaoAcesso.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Desassociar um perfil de um usuário
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("perfil")]
-        public async Task<IActionResult> DesassociarUsuarioAoPerfil(DesassociarUsuarioPerfilModel model)
+        public async Task<IActionResult> DesassociarUsuarioAoPerfil(DesassociarUsuarioPerfilRequisicao model)
         {
             _logger.LogInformation($"[UsuarioController] Desassociando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
+
+            if (!model.Valido)
+                return BadRequest(new { erros = model.Erros });
+
             var resultado = await _mediator.Send(new DesassociarUsuarioPerfilCommand(
                 model.Cpf,
                 model.IdCondominio,
@@ -100,6 +122,52 @@ namespace GestaoAcesso.Controllers
                 return Ok(resultado);
 
             return BadRequest(resultado);
+        }
+
+        /// <summary>
+        /// Verifica se usuário é administrador do condominio
+        /// </summary>
+        /// <param name="idCondominio"></param>
+        /// <param name="cpfUsuario"></param>
+        /// <returns></returns>
+        [HttpHead]
+        [Route("administrador")]
+        public async Task<IActionResult> VerificarSeUsuarioEhAdministradorDoCondominio(int idCondominio, string cpfUsuario)
+        {
+            _logger.LogInformation($"[UsuarioController] Verificando se o usuário {cpfUsuario} é administrador do condomínio {idCondominio}");
+
+            var resultado = await _mediator.Send(new ObterDadosUsuarioCommand(cpfUsuario));
+
+            if (resultado == null || !resultado.ListaPerfis.Any())
+                return Unauthorized();
+
+            if (resultado.ListaPerfis.Any(p => p.PerfilAdministradorCondominio(idCondominio)))
+                return Ok();
+
+            return Unauthorized();
+        }
+
+        /// <summary>
+        /// Verifica se usuário é vinculado ao condominio
+        /// </summary>
+        /// <param name="idCondominio"></param>
+        /// <param name="cpfUsuario"></param>
+        /// <returns></returns>
+        [HttpHead]
+        [Route("morador")]
+        public async Task<IActionResult> VerificarSeUsuarioEstaVinculadoAoCondominio(int idCondominio, string cpfUsuario)
+        {
+            _logger.LogInformation($"[UsuarioController] Verificando se o usuário {cpfUsuario} é administrador do condomínio {idCondominio}");
+
+            var resultado = await _mediator.Send(new ObterDadosUsuarioCommand(cpfUsuario));
+
+            if (resultado == null || !resultado.ListaPerfis.Any())
+                return Unauthorized();
+
+            if (resultado.ListaPerfis.Any(p => p.PerfilAdministradorGeral || p.IdCondominio == idCondominio))
+                return Ok();
+
+            return Unauthorized();
         }
     }
 }
