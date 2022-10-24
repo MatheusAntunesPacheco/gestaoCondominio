@@ -62,10 +62,14 @@ namespace Agendamento.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> ObterAgendameto(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
+        public async Task<IActionResult> ObterAgendameto([FromQuery] ObterAgendamentoRequisicao model)
         {
-            _logger.LogInformation($"[AgendamentosController] Iniciando consulta por agendamentos do condominio {idCondominio}, area {idAreaCondominio}");
-            var consultaPaginadaAgendamentos = _agendamentosRepository.Listar(idCondominio, idAreaCondominio, dataInicio, dataFim, pagina, tamanhoPagina);
+            _logger.LogInformation($"[AgendamentosController] Iniciando consulta por agendamentos do condominio");
+
+            if(!model.Valido)
+                return BadRequest(new { erros = model.Erros});
+
+            var consultaPaginadaAgendamentos = _agendamentosRepository.Listar(model.IdCondominio, model.IdAreaCondominio, model.DataInicio, model.DataFim, model.ConsultarAgendamentosCancelados, model.Pagina, model.TamanhoPagina);
             var listaRetornoAgendamentos = consultaPaginadaAgendamentos.listaAgendamentos.Select(a =>
                     new ObterAgendamentoResultado(
                             a.IdCondominio,
@@ -76,7 +80,7 @@ namespace Agendamento.API.Controllers
                         )
                 );
 
-            return Ok(new ConsultaPaginada<ObterAgendamentoResultado>(pagina, tamanhoPagina, consultaPaginadaAgendamentos.quantidadeTotal, listaRetornoAgendamentos));
+            return Ok(new ConsultaPaginada<ObterAgendamentoResultado>(model.Pagina, model.TamanhoPagina, consultaPaginadaAgendamentos.quantidadeTotal, listaRetornoAgendamentos));
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using Agendamento.Infrastructure;
 using Agendamento.Infrastructure.Enums;
 using Agendamento.Infrastructure.Model;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace Agendamento.API.Infrastructure.Repositories
 {
@@ -46,19 +47,36 @@ namespace Agendamento.API.Infrastructure.Repositories
                                          );
         }
 
-        public (int quantidadeTotal, IEnumerable<AgendamentoModel> listaAgendamentos) Listar(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
+        public (int quantidadeTotal, IEnumerable<AgendamentoModel> listaAgendamentos) Listar(int? idCondominio, int? idAreaCondominio, DateTime? dataInicio, DateTime? dataFim, bool retornarCancelados, int pagina, int tamanhoPagina)
         {
+            IQueryable<AgendamentoModel> query = MontarFiltroConsultaAgendamentos(idCondominio, idAreaCondominio, dataInicio, dataFim, retornarCancelados);
+
             int quantidadeRegistrosAPular = tamanhoPagina * (pagina - 1);
-            var agendamentos = _context.Agendamentos.Where(
-                        a => a.IdCondominio == idCondominio
-                          && a.IdAreaCondominio == idAreaCondominio
-                          && a.DataEvento >= dataInicio
-                          && a.DataEvento <= dataFim);
+            IQueryable<AgendamentoModel> queryPaginada = query.Skip(quantidadeRegistrosAPular).Take(tamanhoPagina);
 
-            var paginaDeDados = agendamentos
-                        .Skip(quantidadeRegistrosAPular).Take(tamanhoPagina);
+            return (query.Count(), queryPaginada);
+        }
 
-            return (agendamentos.Count(), paginaDeDados.Select(e => e));
+        private IQueryable<AgendamentoModel> MontarFiltroConsultaAgendamentos(int? idCondominio, int? idAreaCondominio, DateTime? dataInicio, DateTime? dataFim, bool retornarCancelados)
+        {
+            IQueryable<AgendamentoModel> query = _context.Agendamentos;
+
+            if (idCondominio.HasValue)
+                query = query.Where(a => a.IdCondominio == idCondominio.Value);
+
+            if (idAreaCondominio.HasValue)
+                query = query.Where(a => a.IdAreaCondominio == idAreaCondominio.Value);
+
+            if (dataInicio.HasValue)
+                query = query.Where(a => a.DataEvento >= dataInicio.Value);
+
+            if (dataFim.HasValue)
+                query = query.Where(a => a.DataEvento >= dataFim.Value);
+
+            if (!retornarCancelados)
+                query = query.Where(a => a.StatusAgendamento != StatusAgendamentoEnum.Cancelado);
+
+            return query;
         }
 
         public void AtualizarAgendamento(AgendamentoModel agendamento)
