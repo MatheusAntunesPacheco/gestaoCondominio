@@ -8,6 +8,6 @@ namespace Mobile.BFF.API.Services.GestaoAcessos
         Task<ProcessamentoBaseResponse> CriarUsuario(CriacaoUsuariolRequest requisicao);
         Task<AutenticacaoUsuarioResponse> AutenticarUsuario(AutenticacaoUsuarioRequest requisicao);
         Task<ProcessamentoBaseResponse> AssociarUsuarioAUmPerfil(AssociacaoUsuarioPerfilRequest requisicao);
-        Task<ProcessamentoBaseResponse> DesassociarUsuarioAUmPerfil(DesassociacaoUsuarioPerfilRequest model);
+        Task<ProcessamentoBaseResponse> DesassociarUsuarioAUmPerfil(DesassociacaoUsuarioPerfilRequest requisicao);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Agendamento.API.Infrastructure.Interfaces;
+﻿using Agendamento.Infrastructure.Interfaces.Repositories;
 using MediatR;
 
 namespace Agendamento.API.Application.Command.AlterarEvento

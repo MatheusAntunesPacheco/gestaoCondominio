@@ -17,8 +17,8 @@
                 public static readonly string UrlBasePath = Environment.GetEnvironmentVariable("URL_API_GESTAO_ACESSO");
                 public static readonly string CriacaoUsuario = "usuarios";
                 public static readonly string AutenticacaoUsuario = "usuarios/autenticacao";
-                public static readonly string AssociacaoUsuario = "usuarios/perfil";
-                public static readonly string DesassociacaoUsuario = "usuarios/perfil";
+                public static readonly string AssociacaoUsuario = "perfil-usuarios/perfil";
+                public static readonly string DesassociacaoUsuario = "perfil-usuarios/perfil";
             }
 
             public static class ApiAgendamento

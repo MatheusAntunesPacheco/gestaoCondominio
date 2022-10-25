@@ -1,8 +1,8 @@
 using Agendamento.API.Application.Command.AgendarEvento;
 using Agendamento.API.Application.Command.AlterarEvento;
 using Agendamento.API.Application.Command.CancelarEvento;
-using Agendamento.API.Infrastructure.Interfaces;
 using Agendamento.API.Models;
+using Agendamento.Infrastructure.Interfaces.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

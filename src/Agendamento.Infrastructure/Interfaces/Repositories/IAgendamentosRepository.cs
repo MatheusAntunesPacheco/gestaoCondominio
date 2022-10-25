@@ -1,6 +1,6 @@
 ﻿using Agendamento.Infrastructure.Model;
 
-namespace Agendamento.API.Infrastructure.Interfaces
+namespace Agendamento.Infrastructure.Interfaces.Repositories
 {
     public interface IAgendamentosRepository
     {

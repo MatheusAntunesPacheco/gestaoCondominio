@@ -1,9 +1,8 @@
-﻿using Agendamento.API.Infrastructure.Interfaces;
-using Agendamento.Infrastructure;
+﻿using Agendamento.Infrastructure;
 using Agendamento.Infrastructure.Enums;
+using Agendamento.Infrastructure.Interfaces.Repositories;
 using Agendamento.Infrastructure.Model;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Agendamento.API.Infrastructure.Repositories
 {

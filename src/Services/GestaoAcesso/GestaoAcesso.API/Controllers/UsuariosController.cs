@@ -1,8 +1,5 @@
-using GestaoAcesso.API.Application.Command.AssociarUsuarioPerfil;
 using GestaoAcesso.API.Application.Command.AutenticarUsuario;
 using GestaoAcesso.API.Application.Command.CadastrarUsuario;
-using GestaoAcesso.API.Application.Command.DesassociarUsuarioPerfil;
-using GestaoAcesso.API.Application.Command.ObterDadosUsuario;
 using GestaoAcesso.API.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -68,112 +65,6 @@ namespace GestaoAcesso.Controllers
                 return Ok(resultado);
 
             return Unauthorized(resultado);
-        }
-
-        /// <summary>
-        /// Associar usuário a um perfil
-        /// </summary>
-        /// <param name="associarUsuarioPerfilCommand"></param>
-        /// <returns></returns>
-        [HttpPut]
-        [HttpPost]
-        [Route("perfil")]
-        public async Task<IActionResult> AssociarUsuarioAoPerfil(AssociarUsuarioPerfilRequisicao model)
-        {
-            _logger.LogInformation($"[UsuarioController] Associando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
-
-            if (!model.Valido)
-                return BadRequest(new { erros = model.Erros });
-
-            var resultado = await _mediator.Send(new AssociarUsuarioPerfilCommand(
-                model.Cpf, 
-                model.IdCondominio, 
-                model.Administrador,
-                model.CpfUsuarioLogado)
-            );
-
-            if (resultado.Sucesso)
-                return Ok(resultado);
-
-            return BadRequest(resultado);
-        }
-
-        /// <summary>
-        /// Desassociar um perfil de um usuário
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpDelete]
-        [Route("perfil")]
-        public async Task<IActionResult> DesassociarUsuarioAoPerfil(DesassociarUsuarioPerfilRequisicao model)
-        {
-            _logger.LogInformation($"[UsuarioController] Desassociando usuário {model.Cpf} ao perfil para o condomínio {model.IdCondominio}");
-
-            if (!model.Valido)
-                return BadRequest(new { erros = model.Erros });
-
-            var resultado = await _mediator.Send(new DesassociarUsuarioPerfilCommand(
-                model.Cpf,
-                model.IdCondominio,
-                model.CpfUsuarioLogado)
-            );
-
-            if (resultado.Sucesso)
-                return Ok(resultado);
-
-            return BadRequest(resultado);
-        }
-
-        /// <summary>
-        /// Verifica se usuário é administrador do condominio
-        /// </summary>
-        /// <param name="idCondominio"></param>
-        /// <param name="cpfUsuario"></param>
-        /// <returns>
-        /// 200 - Usuário é administrador do condominio
-        /// 204 - usuário não é administrador do condominio
-        /// </returns>
-        [HttpHead]
-        [Route("administrador")]
-        public async Task<IActionResult> VerificarSeUsuarioEhAdministradorDoCondominio(int idCondominio, string cpfUsuario)
-        {
-            _logger.LogInformation($"[UsuarioController] Verificando se o usuário {cpfUsuario} é administrador do condomínio {idCondominio}");
-
-            var resultado = await _mediator.Send(new ObterDadosUsuarioCommand(cpfUsuario));
-
-            if (resultado == null || !resultado.ListaPerfis.Any())
-                return NoContent();
-
-            if (resultado.ListaPerfis.Any(p => p.PerfilAdministradorCondominio(idCondominio)))
-                return Ok();
-
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Verifica se usuário é vinculado ao condominio
-        /// </summary>
-        /// <param name="idCondominio"></param>
-        /// <param name="cpfUsuario"></param>
-        /// <returns>
-        /// 200 - Usuário pertence ao condominio
-        /// 204 - usuário não pertence ao condominio
-        /// </returns>
-        [HttpHead]
-        [Route("morador")]
-        public async Task<IActionResult> VerificarSeUsuarioEstaVinculadoAoCondominio(int idCondominio, string cpfUsuario)
-        {
-            _logger.LogInformation($"[UsuarioController] Verificando se o usuário {cpfUsuario} é administrador do condomínio {idCondominio}");
-
-            var resultado = await _mediator.Send(new ObterDadosUsuarioCommand(cpfUsuario));
-
-            if (resultado == null || !resultado.ListaPerfis.Any())
-                return NoContent();
-
-            if (resultado.ListaPerfis.Any(p => p.PerfilAdministradorGeral || p.IdCondominio == idCondominio))
-                return Ok();
-
-            return NoContent();
         }
     }
 }
