@@ -1,5 +1,5 @@
 ﻿using Mobile.BFF.API.Application;
-using Mobile.BFF.API.Models;
+using Mobile.BFF.API.Models.GestaoAcesso;
 using Mobile.BFF.API.Services.GestaoAcessos.Models;
 using System.Text;
 using System.Text.Json;

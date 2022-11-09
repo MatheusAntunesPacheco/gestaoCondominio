@@ -1,4 +1,5 @@
 ﻿using Mobile.BFF.API.Application;
+using Mobile.BFF.API.Models.Agendamento;
 using Mobile.BFF.API.Services.Agendamento.Models;
 using System.Text;
 using System.Text.Json;
@@ -29,21 +30,36 @@ namespace Mobile.BFF.API.Services.Agendamento
             });
         }
 
-        public async Task<ConsultaPaginada<AgendamentoEventoResult>> ListarAgendamentos(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina)
+        public async Task<ConsultaPaginada<AgendamentoEventoResult>> ListarAgendamentos(ListarEventoRequest requisicao)
         {
             _logger.LogInformation($"[AgendamentoClient] Iniciar requisição HTTP para listar agendamento um evento");
             var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
-            queryString.Add("idCondominio", idCondominio.ToString());
-            queryString.Add("idAreaCondominio", idAreaCondominio.ToString());
-            queryString.Add("dataInicio", dataInicio.ToString("yyyy-MM-dd"));
-            queryString.Add("dataFim", dataFim.ToString("yyyy-MM-dd"));
-            queryString.Add("pagina", pagina.ToString());
-            queryString.Add("tamanhoPagina", tamanhoPagina.ToString());
+            queryString.Add("idCondominio", requisicao.IdCondominio?.ToString());
+            queryString.Add("idAreaCondominio", requisicao.IdAreaCondominio?.ToString());
+            queryString.Add("dataInicio", requisicao.DataInicio?.ToString("yyyy-MM-dd"));
+            queryString.Add("dataFim", requisicao.DataFim?.ToString("yyyy-MM-dd"));
+            queryString.Add("pagina", requisicao.Pagina.ToString());
+            queryString.Add("tamanhoPagina", requisicao.TamanhoPagina.ToString());
+            queryString.Add("consultarAgendamentosCancelados", requisicao.ConsultarAgendamentosCancelados.ToString());
 
             var uri = Configuracao.Url.ApiAgendamento.UrlBasePath + Configuracao.Url.ApiAgendamento.ListarEvento + "?" + queryString.ToString();
             
             var resposta = await _httpClient.GetAsync(uri);
             return JsonSerializer.Deserialize<ConsultaPaginada<AgendamentoEventoResult>>(await resposta.Content.ReadAsStringAsync(), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+
+        public async Task<ProcessamentoBaseResponse> CancelarAgendamento(CancelarEventoRequest requisicao, string usuarioLogado)
+        {
+            _logger.LogInformation($"[AgendamentoClient] Iniciar requisição HTTP para cancelar um evento");
+            var uri = Configuracao.Url.ApiAgendamento.UrlBasePath + Configuracao.Url.ApiAgendamento.CancelarEvento;
+            var requisicaoApiAgendamentos = new CancelaAgendamentoEventoRequest(requisicao.IdCondominio, requisicao.IdAreaCondominio, requisicao.DataEvento, usuarioLogado);
+            var conteudo = new StringContent(JsonSerializer.Serialize(requisicaoApiAgendamentos), Encoding.UTF8, "application/json");
+            var resposta = await _httpClient.PutAsync(uri, conteudo);
+
+            return JsonSerializer.Deserialize<ProcessamentoBaseResponse>(await resposta.Content.ReadAsStringAsync(), new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });

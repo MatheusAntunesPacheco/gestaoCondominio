@@ -27,13 +27,25 @@
         /// </summary>
         public string StatusAgendamento { get; private set; }
 
-        public ObterAgendamentoResultado(int idCondominio, int idAreaCondominio, string cpf, DateTime dataEvento, string statusAgendamento)
+        /// <summary>
+        /// Cpf do usuário logado, para saber se ele possui permissão para realizar essa associação
+        /// </summary>
+        public string CpfUsuarioLogado { get; private set; }
+
+        /// <summary>
+        /// Data da alteração ou criação do registro de agendamento
+        /// </summary>
+        public DateTime DataAlteracao { get; private set; }
+
+        public ObterAgendamentoResultado(int idCondominio, int idAreaCondominio, string cpf, DateTime dataEvento, string statusAgendamento, string cpfUsuarioLogado, DateTime dataAlteracao)
         {
             IdCondominio = idCondominio;
             IdAreaCondominio = idAreaCondominio;
             Cpf = cpf;
             DataEvento = dataEvento;
             StatusAgendamento = statusAgendamento;
+            CpfUsuarioLogado = cpfUsuarioLogado;
+            DataAlteracao = dataAlteracao;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Mobile.BFF.API.Models
+﻿namespace Mobile.BFF.API.Models.GestaoAcesso
 {
     public class AutenticacaoUsuarioRequest
     {
@@ -6,7 +6,7 @@
         /// CPF do usuário a ser autenticado
         /// </summary>
         public string Cpf { get; private set; }
-        
+
         /// <summary>
         /// Senha do usuário a ser autenticado
         /// </summary>

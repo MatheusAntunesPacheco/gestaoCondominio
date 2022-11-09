@@ -35,10 +35,10 @@ namespace GestaoAcesso.Controllers
 
             var resultado = await _mediator.Send(
                 new CadastrarUsuarioCommand(
-                    model.Nome,
-                    model.Cpf,
-                    model.Senha,
-                    model.Email
+                    model.Nome!,
+                    model.Cpf!,
+                    model.Senha!,
+                    model.Email!
                 )
             );
 
@@ -59,7 +59,7 @@ namespace GestaoAcesso.Controllers
             if (!model.Valido)
                 return BadRequest(new { erros = model.Erros });
 
-            var resultado = await _mediator.Send(new AutenticarUsuarioCommand(model.Cpf, model.Senha));
+            var resultado = await _mediator.Send(new AutenticarUsuarioCommand(model.Cpf!, model.Senha!));
 
             if (resultado.Autenticado)
                 return Ok(resultado);

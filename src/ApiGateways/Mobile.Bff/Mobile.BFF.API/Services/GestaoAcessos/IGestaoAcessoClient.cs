@@ -1,4 +1,4 @@
-﻿using Mobile.BFF.API.Models;
+﻿using Mobile.BFF.API.Models.GestaoAcesso;
 using Mobile.BFF.API.Services.GestaoAcessos.Models;
 
 namespace Mobile.BFF.API.Services.GestaoAcessos

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mobile.BFF.API.Application.Command.AutenticarUsuario;
 using Mobile.BFF.API.Application.Command.LerTokenJwt;
-using Mobile.BFF.API.Models;
+using Mobile.BFF.API.Models.GestaoAcesso;
 using Mobile.BFF.API.Services.GestaoAcessos;
 
 namespace Mobile.BFF.API.Controllers

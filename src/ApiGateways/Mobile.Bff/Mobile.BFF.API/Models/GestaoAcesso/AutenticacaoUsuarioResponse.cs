@@ -1,4 +1,4 @@
-﻿namespace Mobile.BFF.API.Models
+﻿namespace Mobile.BFF.API.Models.GestaoAcesso
 {
     public class AutenticacaoUsuarioResponse
     {

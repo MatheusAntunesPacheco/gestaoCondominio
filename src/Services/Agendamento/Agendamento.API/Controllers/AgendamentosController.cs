@@ -1,3 +1,4 @@
+using Agendamento.API.Application.Command;
 using Agendamento.API.Application.Command.AgendarEvento;
 using Agendamento.API.Application.Command.AlterarEvento;
 using Agendamento.API.Application.Command.CancelarEvento;
@@ -83,7 +84,9 @@ namespace Agendamento.API.Controllers
                             a.IdAreaCondominio,
                             a.Cpf,
                             a.DataEvento,
-                            a.StatusAgendamento.ToString()
+                            a.StatusAgendamento.ToString(),
+                            a.CpfAlteracao,
+                            a.DataAlteracao
                         )
                 );
 
@@ -97,12 +100,15 @@ namespace Agendamento.API.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("cancelamento")]
-        public async Task<IActionResult> CancelarAgendamento([FromQuery] CancelarAgendamentoRequisicao model)
+        public async Task<IActionResult> CancelarAgendamento(CancelarAgendamentoRequisicao model)
         {
             _logger.LogInformation($"[AgendamentosController] Iniciando cancelamento de agendamento no condominio");
 
+            if (model == null)
+                return BadRequest(new ProcessamentoBaseResponse(false, "Necessário que requisição seja preenchida"));
+
             if (!model.Valido)
-                return BadRequest(new { erros = model.Erros });
+                return BadRequest(new ProcessamentoBaseResponse(false, string.Join("; ", model.Erros)));
 
             var resultado = await _mediator.Send(new CancelarEventoCommand(
                             model.IdCondominio.Value,

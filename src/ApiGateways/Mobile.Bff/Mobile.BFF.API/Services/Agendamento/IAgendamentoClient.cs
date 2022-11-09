@@ -1,10 +1,12 @@
-﻿using Mobile.BFF.API.Services.Agendamento.Models;
+﻿using Mobile.BFF.API.Models.Agendamento;
+using Mobile.BFF.API.Services.Agendamento.Models;
 
 namespace Mobile.BFF.API.Services.Agendamento
 {
     public interface IAgendamentoClient
     {
         Task<ProcessamentoBaseResponse> CriarAgendamento(AgendamentoEventoRequest requisicao);
-        Task<ConsultaPaginada<AgendamentoEventoResult>> ListarAgendamentos(int idCondominio, int idAreaCondominio, DateTime dataInicio, DateTime dataFim, int pagina, int tamanhoPagina);
+        Task<ConsultaPaginada<AgendamentoEventoResult>> ListarAgendamentos(ListarEventoRequest requisicao);
+        Task<ProcessamentoBaseResponse> CancelarAgendamento(CancelarEventoRequest requisicao, string usuarioLogado);
     }
 }

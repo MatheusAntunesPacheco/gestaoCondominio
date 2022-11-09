@@ -70,7 +70,7 @@ namespace Agendamento.API.Infrastructure.Repositories
                 query = query.Where(a => a.DataEvento >= dataInicio.Value);
 
             if (dataFim.HasValue)
-                query = query.Where(a => a.DataEvento >= dataFim.Value);
+                query = query.Where(a => a.DataEvento <= dataFim.Value);
 
             if (!retornarCancelados)
                 query = query.Where(a => a.StatusAgendamento != StatusAgendamentoEnum.Cancelado);
