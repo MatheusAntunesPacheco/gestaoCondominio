@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mobile.BFF.API.Application.Command.LerTokenJwt;
-using Mobile.BFF.API.Models;
 using Mobile.BFF.API.Models.Agendamento;
 using Mobile.BFF.API.Services.Agendamento;
 using Mobile.BFF.API.Services.Agendamento.Models;
