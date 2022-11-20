@@ -11,43 +11,34 @@
         public bool Autenticado { get; private set; }
 
         /// <summary>
-        /// CPF dp usuário
+        /// Token JWT gerado
         /// </summary>
-        public string Cpf { get; private set; }
+        public string Token { get; private set; }
 
         /// <summary>
-        /// Nome do usuário
+        /// Data de criação do Token
         /// </summary>
-        public string Nome { get; private set; }
+        public DateTime? DataCriacaoToken { get; private set; }
 
         /// <summary>
-        /// Atributo que indica se o usuário é administrador do sistema
+        /// Data de expiração do Token
         /// </summary>
-        public bool AdministradorGeral { get; private set; }
+        public DateTime? DataExpiracaoToken { get; private set; }
 
-        /// <summary>
-        /// Lista de Id's de condomínio cujo usuário autenticado é o administrador
-        /// </summary>
-        public IEnumerable<int> CondominiosAdministrador { get; private set; }
-
-        /// <summary>
-        /// Lista de Id's de condomínio cujo usuário autenticado é usuário comum
-        /// </summary>
-        public IEnumerable<int> CondominiosUsuarioComum { get; private set; }
-
-        public AutenticarUsuarioResponse(bool autenticado, string cpf, string nome, bool administradorGeral, IEnumerable<int> condominiosAdministrador, IEnumerable<int> condominiosUsuarioComum)
+        public AutenticarUsuarioResponse(bool autenticado, string token, DateTime dataCriacaoToken, DateTime dataExpiracaoToken)
         {
             Autenticado = autenticado;
-            Cpf = cpf;
-            Nome = nome;
-            AdministradorGeral = administradorGeral;
-            CondominiosAdministrador = condominiosAdministrador;
-            CondominiosUsuarioComum = condominiosUsuarioComum;
+            Token = token;
+            DataCriacaoToken = dataCriacaoToken;
+            DataExpiracaoToken = dataExpiracaoToken;
         }
 
         public AutenticarUsuarioResponse(bool autenticado)
         {
             Autenticado = autenticado;
+            Token = string.Empty;
+            DataCriacaoToken = null;
+            DataExpiracaoToken = null;
         }
     }
 }

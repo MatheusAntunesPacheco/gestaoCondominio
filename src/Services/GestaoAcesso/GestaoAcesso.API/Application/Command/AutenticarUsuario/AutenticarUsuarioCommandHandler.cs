@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using GestaoAcesso.API.Application.Command.CriptografarTexto;
+using GestaoAcesso.API.Application.Command.GerarTokenJwt;
 using GestaoAcesso.API.Infrastructure.Interfaces;
 using MediatR;
 
@@ -22,6 +23,7 @@ namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
             _perfisUsuariosRepository = perfisUsuariosRepository;
             _mediator = mediator;
         }
+
         public async Task<AutenticarUsuarioResponse> Handle(AutenticarUsuarioCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"[AutenticarUsuarioCommandHandler] Iniciando autenticação do usuário {request.Cpf}");
@@ -41,7 +43,7 @@ namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
             }
 
             _logger.LogInformation($"[AutenticarUsuarioCommandHandler] Validando senha do usuário {request.Cpf}");
-            var senhaCriptografada = await CriptografarSenha(request.Senha);
+            var senhaCriptografada = await _mediator.Send(new CriptografarTextoCommand(request.Senha));
 
             if (senhaCriptografada != usuario.SenhaCriptografada)
             {
@@ -53,17 +55,18 @@ namespace GestaoAcesso.API.Application.Command.AutenticarUsuario
             var perfisUsuario = _perfisUsuariosRepository.ListarPorCpf(request.Cpf);
 
             bool usuarioAdministradorGeral = perfisUsuario.Any(p => p.Administrador && !p.IdCondominio.HasValue);
-            var listaCondominiosUsuarioAdministrador = perfisUsuario.Where(p => p.Administrador && p.IdCondominio.HasValue).Select(p => p.IdCondominio.Value);
-            var listaCondominiosUsuarioComum = perfisUsuario.Where(p => !p.Administrador && p.IdCondominio.HasValue).Select(p => p.IdCondominio.Value);
+            var listaCondominiosUsuarioAdministrador = perfisUsuario.Where(p => p.Administrador && p.IdCondominio.HasValue).Select(p => p.IdCondominio!.Value);
+            var listaCondominiosUsuarioComum = perfisUsuario.Where(p => !p.Administrador && p.IdCondominio.HasValue).Select(p => p.IdCondominio!.Value);
 
-            return new AutenticarUsuarioResponse(true, usuario.Cpf, usuario.Nome, usuarioAdministradorGeral, listaCondominiosUsuarioAdministrador, listaCondominiosUsuarioComum);
-        }
+            var tokenJwt = await _mediator.Send(new GerarTokenJwtCommand(
+                    usuario.Cpf,
+                    usuario.Nome,
+                    usuarioAdministradorGeral,
+                    listaCondominiosUsuarioAdministrador,
+                    listaCondominiosUsuarioComum
+                ));
 
-        private async Task<string> CriptografarSenha(string senha)
-        {
-            _logger.LogInformation($"[CadastrarUsuarioCommandHandler] Realizando criptografia de senha");
-            var requisicao = new CriptografarTextoCommand(senha);
-            return await _mediator.Send(requisicao);
+            return new AutenticarUsuarioResponse(true, tokenJwt.Token, tokenJwt.DataCriacaoToken, tokenJwt.DataExpiracaoToken);
         }
     }
 }
